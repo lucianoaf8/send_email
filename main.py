@@ -4,6 +4,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr
 from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
 
@@ -12,7 +13,14 @@ gmail_user = os.getenv("GMAIL_USER")
 gmail_password = os.getenv("GMAIL_PASSWORD")
 display_name = os.getenv("DISPLAY_NAME")
 to_email = "lucianoaf8@gmail.com"
-subject = "Test Email with HTML and styling"
+
+# Get the current date and format the subject string
+current_date = datetime.now()
+formatted_date = current_date.strftime("%A, %B %d, %Y")
+print(formatted_date)
+subject = f"Good Morning, Luciano! Today is {formatted_date}"
+
+# Build email body
 html = """
 <html>
   <body>
