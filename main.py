@@ -1,12 +1,16 @@
 import os
-
-import requests
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.utils import formataddr
 from dotenv import load_dotenv
 
 load_dotenv()
 
 # Load environment variables
-api_key = os.getenv("SENDGRID_API_KEY")
+gmail_user = os.getenv("GMAIL_USER")
+gmail_password = os.getenv("GMAIL_PASSWORD")
+display_name = os.getenv("DISPLAY_NAME")
 to_email = "lucianoaf8@gmail.com"
 subject = "Test Email with HTML and styling"
 html = """
@@ -18,35 +22,21 @@ html = """
 </html>
 """
 
-# Define the endpoint and payload
-endpoint = "https://api.sendgrid.com/v3/mail/send"
-payload = {
-    "personalizations": [
-        {
-            "to": [
-                {
-                    "email": to_email
-                }
-            ],
-            "subject": subject
-        }
-    ],
-    "from": {
-        "email": "lucianoaf8@gmail.com"
-    },
-    "content": [
-        {
-            "type": "text/html",
-            "value": html
-        }
-    ]
-}
+# Create the MIME object
+msg = MIMEMultipart('alternative')
+msg['Subject'] = subject
+msg['From'] = formataddr((display_name, gmail_user))
+msg['To'] = to_email
 
-# Make the request
-response = requests.post(endpoint, auth=("Bearer", api_key), json=payload)
+# Attach the HTML content
+mime_text = MIMEText(html, 'html')
+msg.attach(mime_text)
 
-# Check the status code
-if response.status_code == 202:
+# Connect to Gmail's SMTP server and send the email
+try:
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+        server.login(gmail_user, gmail_password)
+        server.sendmail(gmail_user, to_email, msg.as_string())
     print("Email sent successfully!")
-else:
-    print(f"Error: {response.content}")
+except Exception as e:
+    print(f"Error: {e}")
