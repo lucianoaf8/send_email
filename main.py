@@ -14,7 +14,7 @@ TEST_SEND_TO = os.getenv("TEST_SEND_TO")
 GIPHY_API_KEY = os.getenv("GIPHY_API_KEY")
 
 # Set up logging
-log_folder = "C:/Users/Luciano/Documents/Projects/daily_email/logs"
+log_folder = "/logs"
 if not os.path.exists(log_folder):
     os.makedirs(log_folder)
 
