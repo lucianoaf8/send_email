@@ -10,7 +10,6 @@ load_dotenv()
 COUNTER_FILE = 'counter.txt'
 TEST_SEND_TO = os.getenv("TEST_SEND_TO")
 GIPHY_API_KEY = os.getenv("GIPHY_API_KEY")
-QUOTE_API_KEY = os.getenv("QUOTE_API_KEY")
 
 def get_gif():
     response = requests.get(f"https://api.giphy.com/v1/gifs/random?tag=celebrate&api_key={GIPHY_API_KEY}")
