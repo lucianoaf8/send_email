@@ -2,49 +2,37 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.utils import formataddr
 from dotenv import load_dotenv
-from datetime import datetime
 
+# Load environment variables from .env file
 load_dotenv()
 
-# Load environment variables
-gmail_user = os.getenv("GMAIL_USER")
-gmail_password = os.getenv("GMAIL_PASSWORD")
-display_name = os.getenv("DISPLAY_NAME")
-to_email = "lucianoaf8@gmail.com"
+EMAIL = os.getenv('EMAIL')
+PASSWORD = os.getenv('PASSWORD')
 
-# Get the current date and format the subject string
-current_date = datetime.now()
-formatted_date = current_date.strftime("%A, %B %d, %Y")
-print(formatted_date)
-subject = f"Good Morning, Luciano! Today is {formatted_date}"
+def send_email(to_email, subject, body):
+    # Create the email
+    msg = MIMEMultipart()
+    msg['From'] = EMAIL
+    msg['To'] = to_email
+    msg['Subject'] = subject
 
-# Build email body
-html = """
-<html>
-  <body>
-    <h1 style="color: blue;">This is a test email sent from Python script</h1>
-    <p>This is a <b>test</b> email.</p>
-  </body>
-</html>
-"""
+    msg.attach(MIMEText(body, 'plain'))
 
-# Create the MIME object
-msg = MIMEMultipart('alternative')
-msg['Subject'] = subject
-msg['From'] = formataddr((display_name, gmail_user))
-msg['To'] = to_email
+    # Set up the SMTP server
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(EMAIL, PASSWORD)
 
-# Attach the HTML content
-mime_text = MIMEText(html, 'html')
-msg.attach(mime_text)
+    # Send the email
+    server.send_message(msg)
+    server.quit()
 
-# Connect to Gmail's SMTP server and send the email
-try:
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-        server.login(gmail_user, gmail_password)
-        server.sendmail(gmail_user, to_email, msg.as_string())
-    print("Email sent successfully!")
-except Exception as e:
-    print(f"Error: {e}")
+    print(f"Email sent to {to_email}")
+
+if __name__ == "__main__":
+    # Test the function
+    test_to_email = "example@example.com"
+    test_subject = "Test Email"
+    test_body = "This is a test email."
+    send_email(test_to_email, test_subject, test_body)
