@@ -148,23 +148,6 @@ def fetch_news(topic, num_articles=3):
     
     return articles
 
-def generate_crosswords(num_puzzles=5):
-    """Generate multiple crossword puzzles."""
-    words = [
-        "PYTHON", "ALGORITHM", "DATABASE", "FUNCTION", "VARIABLE",
-        "LOOP", "ARRAY", "STRING", "INTEGER", "BOOLEAN",
-        "CLASS", "OBJECT", "METHOD", "INHERITANCE", "POLYMORPHISM",
-        "API", "FRAMEWORK", "LIBRARY", "DEBUGGING", "COMPILER"
-    ]
-    puzzles = []
-    for _ in range(num_puzzles):
-        word = random.choice(words)
-        words.remove(word)  # Ensure no repetition
-        puzzle = ["_" * len(word)]
-        clue = f"A {len(word)}-letter word related to programming"
-        puzzles.append((puzzle[0], word, clue))
-    return puzzles
-
 def get_historical_birthdays():
     """Fetch important people born on this day."""
     today = datetime.now()
@@ -248,8 +231,6 @@ def create_email_content(counter):
         ai_dev_news = fetch_news("AI Development")
         prompt_eng_news = fetch_news("Prompt Engineering")
         
-        crosswords = generate_crosswords(5)
-        
         birthdays = get_historical_birthdays()
         deaths = get_historical_deaths()
         
@@ -279,7 +260,6 @@ def create_email_content(counter):
             ai_news=ai_news,
             ai_dev_news=ai_dev_news,
             prompt_eng_news=prompt_eng_news,
-            crosswords=crosswords,
             birthdays=birthdays,
             deaths=deaths,
             fun_fact=fun_fact,

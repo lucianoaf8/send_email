@@ -25,9 +25,6 @@
             <h2>Motivational Quote</h2>
             <p class="quote animated">{{ quote }}</p>
             
-            <h2>This Day in History</h2>
-            <p class="history-fact animated">{{ history_fact }}</p>
-            
             <h2>AI News</h2>
             <div class="news-grid">
                 <div class="news-tile">
@@ -50,17 +47,8 @@
                 </div>
             </div>
             
-            <h2>Daily Crosswords</h2>
-            <div class="crossword-container">
-                {% for puzzle, word, clue in crosswords %}
-                <div class="crossword">
-                    <p class="crossword-clue">Clue: {{ clue }}</p>
-                    <div class="crossword-word">{{ word|replace(r/\S/, '_') }}</div>
-                    <button class="reveal-btn">Reveal</button>
-                    <span class="hidden-answer">{{ word }}</span>
-                </div>
-                {% endfor %}
-            </div>
+            <h2>This Day in History</h2>
+            <p class="history-fact animated">{{ history_fact }}</p>
             
             <h2>Historical Events</h2>
             <div class="historical-events">

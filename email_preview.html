@@ -18,16 +18,12 @@ body {
 }
 
 .container {
-    max-width: 800px; /* Increased from 600px */
+    max-width: 600px;
     margin: 20px auto;
     background-color: #ffffff;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-}
-
-.content {
-    padding: 30px; /* Increased from 20px */
 }
 
 .header {
@@ -48,6 +44,10 @@ h2 {
     padding-bottom: 10px;
     margin-top: 30px;
     font-size: 24px;
+}
+
+.content {
+    padding: 20px;
 }
 
 .quote, .challenge, .tip, .fun-fact, .history-fact {
@@ -130,52 +130,6 @@ h2 {
     text-decoration: none;
 }
 
-.crossword-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.crossword {
-    background-color: #e9e9e9;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    width: calc(50% - 10px);
-    display: flex;
-    flex-direction: column;
-}
-
-.crossword-puzzle {
-    font-family: monospace;
-    font-size: 18px;
-    letter-spacing: 3px;
-    margin-bottom: 10px;
-    word-break: break-all;
-}
-
-.reveal-btn {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 3px;
-    cursor: pointer;
-    align-self: flex-start;
-}
-
-.hidden-answer {
-    display: none;
-}
-
-.reveal-btn:focus + .hidden-answer {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-    color: #4CAF50;
-}
-
 .historical-events {
     background-color: #f9f9f9;
     padding: 15px;
@@ -195,18 +149,14 @@ h2 {
     padding: 10px;
     font-size: 0.9em;
 }
-
-.hidden-answer {
-    display: none;
-}</style></head>
+</style></head>
 <body style='font-family: "Roboto", Arial, sans-serif;
 line-height: 1.6;
 color: #333;
 background-color: #f4f4f4;
 margin: 0;
 padding: 0;'>
-<div class="container" style="max-width: 800px;
-/* Increased from 600px */
+<div class="container" style="max-width: 600px;
 margin: 20px auto;
 background-color: #fff;
 border-radius: 10px;
@@ -218,10 +168,9 @@ padding: 20px;
 text-align: center;">
 <h1 style="margin: 0;
 font-size: 28px;">Good Morning, Luca! 🌞</h1>
-<p>Today is Friday, July 12, 2024. It's Day 9 of your journey!</p>
+<p>Today is Friday, July 12, 2024. It's Day 4 of your journey!</p>
 </div>
-<div class="content" style="padding: 30px;
-/* Increased from 20px */;">
+<div class="content" style="padding: 20px;">
 <div class="weather animated" style="background-color: #3498db;
 color: white;
 padding: 20px;
@@ -235,7 +184,7 @@ vertical-align: middle;">🌤️</div>
 <div class="weather-info" style="display: inline-block;
 vertical-align: middle;">
 <div class="weather-temp" style="font-size: 36px;
-font-weight: bold;">23.2°C</div>
+font-weight: bold;">23.7°C</div>
 <div class="weather-desc" style="font-size: 18px;
 margin-top: 5px;">few clouds</div>
 </div>
@@ -253,19 +202,7 @@ margin: 15px 0;
 padding: 15px;
 background-color: #f9f9f9;
 border-left: 5px solid #4CAF50;
-border-radius: 5px;">If you can dream it, you can do it. - Walt Disney</p>
-<h2 style="color: #4CAF50;
-border-bottom: 2px solid #4CAF50;
-padding-bottom: 10px;
-margin-top: 30px;
-font-size: 24px;">This Day in History</h2>
-<p class="history-fact animated" style="font-style: italic;
-color: #555;
-margin: 15px 0;
-padding: 15px;
-background-color: #f9f9f9;
-border-left: 5px solid #4CAF50;
-border-radius: 5px;">70: The armies of Titus attack the walls of Jerusalem after a six-month siege. Three days later they breach the walls, which enables the army to destroy the Second Temple.</p>
+border-radius: 5px;">If we all did the things we are capable of doing, we would literally astound ourselves. - Thomas Edison</p>
 <h2 style="color: #4CAF50;
 border-bottom: 2px solid #4CAF50;
 padding-bottom: 10px;
@@ -316,122 +253,14 @@ text-decoration: none;">Mega-Prompts Are The Latest Powerful Trend In Prompt Eng
 border-bottom: 2px solid #4CAF50;
 padding-bottom: 10px;
 margin-top: 30px;
-font-size: 24px;">Daily Crosswords</h2>
-<div class="crossword-container" style="display: flex;
-flex-wrap: wrap;
-justify-content: space-between;
-margin-top: 20px;">
-<div class="crossword" style="background-color: #e9e9e9;
+font-size: 24px;">This Day in History</h2>
+<p class="history-fact animated" style="font-style: italic;
+color: #555;
+margin: 15px 0;
 padding: 15px;
-border-radius: 5px;
-margin-bottom: 20px;
-width: calc(50% - 10px);
-display: flex;
-flex-direction: column;">
-<p>Clue: A 12-letter word related to programming</p>
-<p class="crossword-puzzle" style="font-family: monospace;
-font-size: 18px;
-letter-spacing: 3px;
-margin-bottom: 10px;
-word-break: break-all;">____________</p>
-<button class="reveal-btn" style="background-color: #4CAF50;
-color: white;
-border: none;
-padding: 5px 10px;
-border-radius: 3px;
-cursor: pointer;
-align-self: flex-start;">Reveal</button>
-<span class="hidden-answer" style="display: none;display: none;">POLYMORPHISM</span>
-</div>
-<div class="crossword" style="background-color: #e9e9e9;
-padding: 15px;
-border-radius: 5px;
-margin-bottom: 20px;
-width: calc(50% - 10px);
-display: flex;
-flex-direction: column;">
-<p>Clue: A 9-letter word related to programming</p>
-<p class="crossword-puzzle" style="font-family: monospace;
-font-size: 18px;
-letter-spacing: 3px;
-margin-bottom: 10px;
-word-break: break-all;">_________</p>
-<button class="reveal-btn" style="background-color: #4CAF50;
-color: white;
-border: none;
-padding: 5px 10px;
-border-radius: 3px;
-cursor: pointer;
-align-self: flex-start;">Reveal</button>
-<span class="hidden-answer" style="display: none;display: none;">ALGORITHM</span>
-</div>
-<div class="crossword" style="background-color: #e9e9e9;
-padding: 15px;
-border-radius: 5px;
-margin-bottom: 20px;
-width: calc(50% - 10px);
-display: flex;
-flex-direction: column;">
-<p>Clue: A 5-letter word related to programming</p>
-<p class="crossword-puzzle" style="font-family: monospace;
-font-size: 18px;
-letter-spacing: 3px;
-margin-bottom: 10px;
-word-break: break-all;">_____</p>
-<button class="reveal-btn" style="background-color: #4CAF50;
-color: white;
-border: none;
-padding: 5px 10px;
-border-radius: 3px;
-cursor: pointer;
-align-self: flex-start;">Reveal</button>
-<span class="hidden-answer" style="display: none;display: none;">CLASS</span>
-</div>
-<div class="crossword" style="background-color: #e9e9e9;
-padding: 15px;
-border-radius: 5px;
-margin-bottom: 20px;
-width: calc(50% - 10px);
-display: flex;
-flex-direction: column;">
-<p>Clue: A 6-letter word related to programming</p>
-<p class="crossword-puzzle" style="font-family: monospace;
-font-size: 18px;
-letter-spacing: 3px;
-margin-bottom: 10px;
-word-break: break-all;">______</p>
-<button class="reveal-btn" style="background-color: #4CAF50;
-color: white;
-border: none;
-padding: 5px 10px;
-border-radius: 3px;
-cursor: pointer;
-align-self: flex-start;">Reveal</button>
-<span class="hidden-answer" style="display: none;display: none;">METHOD</span>
-</div>
-<div class="crossword" style="background-color: #e9e9e9;
-padding: 15px;
-border-radius: 5px;
-margin-bottom: 20px;
-width: calc(50% - 10px);
-display: flex;
-flex-direction: column;">
-<p>Clue: A 9-letter word related to programming</p>
-<p class="crossword-puzzle" style="font-family: monospace;
-font-size: 18px;
-letter-spacing: 3px;
-margin-bottom: 10px;
-word-break: break-all;">_________</p>
-<button class="reveal-btn" style="background-color: #4CAF50;
-color: white;
-border: none;
-padding: 5px 10px;
-border-radius: 3px;
-cursor: pointer;
-align-self: flex-start;">Reveal</button>
-<span class="hidden-answer" style="display: none;display: none;">FRAMEWORK</span>
-</div>
-</div>
+background-color: #f9f9f9;
+border-left: 5px solid #4CAF50;
+border-radius: 5px;">70: The armies of Titus attack the walls of Jerusalem after a six-month siege. Three days later they breach the walls, which enables the army to destroy the Second Temple.</p>
 <h2 style="color: #4CAF50;
 border-bottom: 2px solid #4CAF50;
 padding-bottom: 10px;
@@ -467,7 +296,7 @@ margin: 15px 0;
 padding: 15px;
 background-color: #f9f9f9;
 border-left: 5px solid #4CAF50;
-border-radius: 5px;">Dr. Kellogg introduced Kellogg`s Corn Flakes in hopes that it would reduce masturbation.</p>
+border-radius: 5px;">The sperm of a mouse is actually longer than the sperm of an elephant.</p>
 <h2 style="color: #4CAF50;
 border-bottom: 2px solid #4CAF50;
 padding-bottom: 10px;
@@ -475,7 +304,7 @@ margin-top: 30px;
 font-size: 24px;">Your Daily Dose of Motivation</h2>
 <div class="gif-container" style="text-align: center;
 margin-top: 20px;">
-<img alt="Motivational Gif" src="https://media2.giphy.com/media/2gWgUlENofwqS5k4Ev/giphy.gif?cid=14ff9301r7bu6icds9qthweqtnjeudkafhnon3clahn1g11b&amp;ep=v1_gifs_random&amp;rid=giphy.gif&amp;ct=g" style="max-width: 100%;
+<img alt="Motivational Gif" src="https://media4.giphy.com/media/IzHAfu6gH1CbEBlGva/giphy.gif?cid=14ff9301g6aajz3sk90v73abx7lam5uls7beq25pse4anlzc&amp;ep=v1_gifs_random&amp;rid=giphy.gif&amp;ct=g" style="max-width: 100%;
 border-radius: 10px;
 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);"/>
 </div>
