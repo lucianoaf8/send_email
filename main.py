@@ -1,17 +1,18 @@
 import os
-import sys
 import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
 import pytz
 from send_email import send_email
-import http.client
-import urllib.parse
-import json
 import random
-from jinja2 import Environment, FileSystemLoader
+import jinja2
+import cssutils
+import io
+
+# Suppress cssutils logging
+cssutils.log.setLevel(logging.CRITICAL)
 
 print("Script started.")
 
@@ -90,15 +91,6 @@ def get_weather():
         print(f"Unexpected error in get_weather: {e}")
         return "Weather data unavailable"
 
-def get_this_day_in_history():
-    logging.info("Fetching this day in history.")
-    today = datetime.now()
-    month, day = today.month, today.day
-    response = requests.get(f"https://history.muffinlabs.com/date/{month}/{day}")
-    data = response.json()
-    event = data['data']['Events'][0]  # Get the first event
-    return f"{event['year']}: {event['text']}"
-
 def get_weather_icon(description):
     # Map weather descriptions to more detailed weather icons (using emoji for simplicity)
     weather_icons = {
@@ -128,6 +120,15 @@ def get_weather_tip(description):
         'mist': "Misty conditions. Drive carefully and use fog lights."
     }
     return tips.get(description.lower(), "Check the forecast for detailed weather information.")
+
+def get_this_day_in_history():
+    logging.info("Fetching this day in history.")
+    today = datetime.now()
+    month, day = today.month, today.day
+    response = requests.get(f"https://history.muffinlabs.com/date/{month}/{day}")
+    data = response.json()
+    event = data['data']['Events'][0]  # Get the first event
+    return f"{event['year']}: {event['text']}"
 
 def fetch_news(topic, num_articles=3):
     """Fetch news articles for a given topic."""
@@ -206,6 +207,28 @@ def update_counter():
     logging.info(f"Counter updated to: {counter}")
     return counter
 
+def read_file(filename):
+    with open(filename, 'r', encoding='utf-8') as f:
+        return f.read()
+
+def inline_css(html, css):
+    soup = BeautifulSoup(html, 'html.parser')
+    style = cssutils.parseString(css)
+    
+    for rule in style:
+        if rule.type == rule.STYLE_RULE:
+            for selector in rule.selectorList:
+                for tag in soup.select(selector.selectorText):
+                    if not tag.get('style'):
+                        tag['style'] = ''
+                    tag['style'] += f'{rule.style.cssText};'
+    
+    # Add original CSS in <style> tag for local viewing
+    style_tag = soup.new_tag('style')
+    style_tag.string = css
+    soup.head.append(style_tag)
+    
+    return str(soup)
 
 def create_email_content(counter):
     print("Creating email content.")
@@ -221,291 +244,62 @@ def create_email_content(counter):
         history_fact = get_this_day_in_history()
         fun_fact = get_fun_fact()
         
-        # Fetch news for AI topics
         ai_news = fetch_news("Artificial Intelligence")
         ai_dev_news = fetch_news("AI Development")
         prompt_eng_news = fetch_news("Prompt Engineering")
         
-        # Generate crosswords
         crosswords = generate_crosswords(5)
         
-        # Get historical birthdays and deaths
         birthdays = get_historical_birthdays()
         deaths = get_historical_deaths()
         
+        current_date = datetime.now(pytz.timezone(TIMEZONE)).strftime("%A, %B %d, %Y")
+        
+        # Read the HTML template
+        template_content = read_file('email_template.html')
+
+        # Read the CSS content
+        css_content = read_file('email_style.css')
+
+        # Create Jinja2 environment and template
+        env = jinja2.Environment(loader=jinja2.FileSystemLoader('.'))
+        template = env.from_string(template_content)
+        
+        # Render the template with the data
+        html_content = template.render(
+            USER_NAME=USER_NAME,
+            current_date=current_date,
+            counter=counter,
+            weather=weather,
+            weather_icon=weather_icon,
+            weather_description=weather_description,
+            weather_tip=weather_tip,
+            quote=quote,
+            history_fact=history_fact,
+            ai_news=ai_news,
+            ai_dev_news=ai_dev_news,
+            prompt_eng_news=prompt_eng_news,
+            crosswords=crosswords,
+            birthdays=birthdays,
+            deaths=deaths,
+            fun_fact=fun_fact,
+            gif_url=gif_url
+        )
+        
+        # Inline the CSS
+        final_html = inline_css(html_content, css_content)
+        
+        # Save the final HTML to a file for local viewing
+        with io.open('email_preview.html', 'w', encoding='utf-8') as f:
+            f.write(final_html)
+        
+        logging.info("Email content created with inlined CSS and saved for local viewing.")
+        return final_html
+    
     except Exception as e:
-        print(f"Error while fetching content: {e}")
-        logging.error(f"Error while fetching content: {e}")
+        print(f"Error while creating content: {e}")
+        logging.error(f"Error while creating content: {e}")
         raise
-
-    # Get the current date in the user's timezone
-    current_date = datetime.now(pytz.timezone(TIMEZONE)).strftime("%A, %B %d, %Y")
-
-    email_body = f"""
-    <html>
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <style>
-                @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
-                
-                body {{
-                    font-family: 'Roboto', Arial, sans-serif;
-                    line-height: 1.6;
-                    color: #333;
-                    background-color: #f4f4f4;
-                    margin: 0;
-                    padding: 0;
-                }}
-                .container {{
-                    max-width: 600px;
-                    margin: 20px auto;
-                    background-color: #ffffff;
-                    border-radius: 10px;
-                    overflow: hidden;
-                    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-                }}
-                .header {{
-                    background: linear-gradient(135deg, #4CAF50, #45a049);
-                    color: white;
-                    padding: 20px;
-                    text-align: center;
-                }}
-                h1 {{
-                    margin: 0;
-                    font-size: 28px;
-                    animation: fadeIn 1s;
-                }}
-                h2 {{
-                    color: #4CAF50;
-                    border-bottom: 2px solid #4CAF50;
-                    padding-bottom: 10px;
-                    margin-top: 30px;
-                    font-size: 24px;
-                }}
-                .content {{
-                    padding: 20px;
-                }}
-                .quote, .challenge, .tip, .fun-fact, .history-fact {{
-                    font-style: italic;
-                    color: #555;
-                    margin: 15px 0;
-                    padding: 15px;
-                    background-color: #f9f9f9;
-                    border-left: 5px solid #4CAF50;
-                    border-radius: 5px;
-                    transition: transform 0.3s ease;
-                }}
-                .quote:hover, .challenge:hover, .tip:hover, .fun-fact:hover, .history-fact:hover {{
-                    transform: translateX(10px);
-                }}
-                .weather {{
-                    background: linear-gradient(135deg, #3498db, #2980b9);
-                    color: white;
-                    padding: 20px;
-                    border-radius: 10px;
-                    margin-bottom: 20px;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                }}
-                .weather-icon {{
-                    font-size: 64px;
-                    margin-right: 15px;
-                    display: inline-block;
-                    vertical-align: middle;
-                }}
-                .weather-info {{
-                    display: inline-block;
-                    vertical-align: middle;
-                }}
-                .weather-temp {{
-                    font-size: 36px;
-                    font-weight: bold;
-                }}
-                .weather-desc {{
-                    font-size: 18px;
-                    margin-top: 5px;
-                }}
-                .weather-tip {{
-                    margin-top: 10px;
-                    font-style: italic;
-                }}
-                .gif-container {{
-                    text-align: center;
-                    margin-top: 20px;
-                }}
-                .gif-container img {{
-                    max-width: 100%;
-                    border-radius: 10px;
-                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-                    transition: transform 0.3s ease;
-                }}
-                .gif-container img:hover {{
-                    transform: scale(1.05);
-                }}
-                .news-grid {{
-                    display: grid;
-                    grid-template-columns: repeat(3, 1fr);
-                    gap: 20px;
-                    margin-top: 20px;
-                }}
-                .news-tile {{
-                    background-color: #f0f0f0;
-                    padding: 15px;
-                    border-radius: 5px;
-                    transition: transform 0.3s ease;
-                }}
-                .news-tile:hover {{
-                    transform: translateY(-5px);
-                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-                }}
-                .news-tile h3 {{
-                    font-size: 16px;
-                    margin-top: 0;
-                }}
-                .news-tile a {{
-                    color: #4CAF50;
-                    text-decoration: none;
-                }}
-                .crossword-container {{
-                    display: flex;
-                    flex-wrap: wrap;
-                    justify-content: space-between;
-                    margin-top: 20px;
-                }}
-                .crossword {{
-                    background-color: #e9e9e9;
-                    padding: 15px;
-                    border-radius: 5px;
-                    margin-bottom: 20px;
-                    width: calc(50% - 10px);
-                }}
-                .crossword-puzzle {{
-                    font-family: monospace;
-                    font-size: 18px;
-                    letter-spacing: 3px;
-                }}
-                .reveal-btn {{
-                    background-color: #4CAF50;
-                    color: white;
-                    border: none;
-                    padding: 5px 10px;
-                    border-radius: 3px;
-                    cursor: pointer;
-                    margin-top: 10px;
-                }}
-                .reveal-btn:hover {{
-                    background-color: #45a049;
-                }}
-                .historical-events {{
-                    background-color: #f9f9f9;
-                    padding: 15px;
-                    border-radius: 5px;
-                    margin-top: 20px;
-                }}
-                .historical-events h3 {{
-                    color: #4CAF50;
-                    margin-top: 0;
-                }}
-                .footer {{
-                    background-color: #333;
-                    color: white;
-                    text-align: center;
-                    padding: 10px;
-                    font-size: 0.9em;
-                }}
-                @keyframes fadeIn {{
-                    from {{ opacity: 0; }}
-                    to {{ opacity: 1; }}
-                }}
-                @keyframes slideIn {{
-                    from {{ transform: translateX(-50px); opacity: 0; }}
-                    to {{ transform: translateX(0); opacity: 1; }}
-                }}
-                .animated {{
-                    animation: slideIn 0.5s ease-out;
-                }}
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <h1>Good Morning, {USER_NAME}! 🌞</h1>
-                    <p>Today is {current_date}. It's Day {counter} of your journey!</p>
-                </div>
-                <div class="content">
-                    <div class="weather animated">
-                        <div class="weather-icon">{weather_icon}</div>
-                        <div class="weather-info">
-                            <div class="weather-temp">{weather.split(',')[0]}</div>
-                            <div class="weather-desc">{weather_description}</div>
-                        </div>
-                        <div class="weather-tip">{weather_tip}</div>
-                    </div>
-                    
-                    <h2>Motivational Quote</h2>
-                    <p class="quote animated">{quote}</p>
-                    
-                    <h2>This Day in History</h2>
-                    <p class="history-fact animated">{history_fact}</p>
-                    
-                    <h2>AI News</h2>
-                    <div class="news-grid">
-                        <div class="news-tile">
-                            <h3>Artificial Intelligence</h3>
-                            {''.join(f'<p><a href="{article["link"]}">{article["title"]}</a></p>' for article in ai_news)}
-                        </div>
-                        <div class="news-tile">
-                            <h3>AI Development</h3>
-                            {''.join(f'<p><a href="{article["link"]}">{article["title"]}</a></p>' for article in ai_dev_news)}
-                        </div>
-                        <div class="news-tile">
-                            <h3>Prompt Engineering</h3>
-                            {''.join(f'<p><a href="{article["link"]}">{article["title"]}</a></p>' for article in prompt_eng_news)}
-                        </div>
-                    </div>
-                    
-                    <h2>Daily Crosswords</h2>
-                    <div class="crossword-container">
-                        {''.join(f'''
-                        <div class="crossword">
-                            <p>Clue: {clue}</p>
-                            <p class="crossword-puzzle">{puzzle}</p>
-                            <button class="reveal-btn" onclick="this.nextElementSibling.style.display='inline'; this.style.display='none';">Reveal</button>
-                            <span style="display:none;">{word}</span>
-                        </div>
-                        ''' for puzzle, word, clue in crosswords)}
-                    </div>
-                    
-                    <h2>Historical Events</h2>
-                    <div class="historical-events">
-                        <h3>Births on this day:</h3>
-                        <ul>
-                           {''.join(f'<li>{birth}</li>' for birth in birthdays)}
-                        </ul>
-                        <h3>Deaths on this day:</h3>
-                        <ul>
-                            {''.join(f'<li>{death}</li>' for death in deaths)}
-                        </ul>
-                    </div>
-                    
-                    <h2>Fun Fact</h2>
-                    <p class="fun-fact animated">{fun_fact}</p>
-                    
-                    <h2>Your Daily Dose of Motivation</h2>
-                    <div class="gif-container">
-                        <img src="{gif_url}" alt="Motivational Gif">
-                    </div>
-                </div>
-                <div class="footer">
-                    <p>This email is part of your daily motivational series. Keep pushing forward!</p>
-                </div>
-            </div>
-        </body>
-    </html>
-    """
-
-    logging.info("Email content created.")
-    return email_body
 
 if __name__ == "__main__":
     try:

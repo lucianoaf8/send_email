@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Motivation and Information</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="email_style.css">
 </head>
 <body>
     <div class="container">
@@ -54,8 +54,8 @@
             <div class="crossword-container">
                 {% for puzzle, word, clue in crosswords %}
                 <div class="crossword">
-                    <p>Clue: {{ clue }}</p>
-                    <p class="crossword-puzzle">{{ puzzle }}</p>
+                    <p class="crossword-clue">Clue: {{ clue }}</p>
+                    <div class="crossword-word">{{ word|replace(r/\S/, '_') }}</div>
                     <button class="reveal-btn">Reveal</button>
                     <span class="hidden-answer">{{ word }}</span>
                 </div>
@@ -90,6 +90,5 @@
             <p>This email is part of your daily motivational series. Keep pushing forward!</p>
         </div>
     </div>
-    <script src="script.js"></script>
 </body>
 </html>
