@@ -10,6 +10,8 @@ import random
 import jinja2
 import cssutils
 import io
+from utils import handle_api_error, compress_image, ab_test, get_fallback_data, update_fallback_data, APIError
+
 
 # Suppress cssutils logging
 cssutils.log.setLevel(logging.CRITICAL)
@@ -44,19 +46,32 @@ print(f"Logging to: {log_filename}")
 
 def get_gif():
     logging.info("Fetching GIF of the day.")
-    response = requests.get(f"https://api.giphy.com/v1/gifs/random?tag=motivational&api_key={GIPHY_API_KEY}")
-    gif_data = response.json()['data']
-    gif_url = gif_data['images']['original']['url']
-    logging.info(f"GIF URL: {gif_url}")
-    return gif_url
-
+    try:
+        response = requests.get(f"https://api.giphy.com/v1/gifs/random?tag=motivational&api_key={GIPHY_API_KEY}")
+        response.raise_for_status()
+        gif_data = response.json()['data']
+        gif_url = gif_data['images']['original']['url']
+        compressed_gif = compress_image(gif_url)
+        update_fallback_data('gif', compressed_gif)
+        logging.info(f"GIF fetched and compressed successfully")
+        return compressed_gif
+    except requests.RequestException as e:
+        handle_api_error("Giphy", e)
+        return get_fallback_data('gif')
+    
 def get_quote():
     logging.info("Fetching quote of the day.")
-    response = requests.get("https://api.quotable.io/random?tags=inspirational")
-    quote_data = response.json()
-    quote = f"{quote_data['content']} - {quote_data['author']}"
-    logging.info(f"Quote: {quote}")
-    return quote
+    try:
+        response = requests.get("https://api.quotable.io/random?tags=inspirational")
+        response.raise_for_status()
+        quote_data = response.json()
+        quote = f"{quote_data['content']} - {quote_data['author']}"
+        update_fallback_data('quote', quote)
+        logging.info(f"Quote fetched: {quote}")
+        return quote
+    except requests.RequestException as e:
+        handle_api_error("Quotable", e)
+        return get_fallback_data('quote')
 
 def get_weather():
     logging.info("Fetching weather forecast.")
@@ -236,6 +251,9 @@ def create_email_content(counter):
         
         current_date = datetime.now(pytz.timezone(TIMEZONE)).strftime("%A, %B %d, %Y")
         
+        # A/B testing for quote placement
+        quote_placement = ab_test('top', 'bottom')
+        
         # Read the HTML template
         template_content = read_file('email_template.html')
 
@@ -256,6 +274,7 @@ def create_email_content(counter):
             weather_description=weather_description,
             weather_tip=weather_tip,
             quote=quote,
+            quote_placement=quote_placement,
             history_fact=history_fact,
             ai_news=ai_news,
             ai_dev_news=ai_dev_news,
@@ -289,13 +308,16 @@ if __name__ == "__main__":
         counter = update_counter()
         print(f"Counter updated: {counter}")
 
-        subject = f"Day {counter}: Your Daily Dose of Motivation and Information 🌟"
+        subject_a = f"Day {counter}: Your Daily Dose of Motivation and Information 🌟"
+        subject_b = f"Day {counter}: Inspire Your Day with Facts and Fun 🎉"
+        subject = ab_test(subject_a, subject_b)
+
         to_email = TEST_SEND_TO
         html_content = create_email_content(counter)
 
         print("Sending email.")
         logging.info("Sending email.")
-        send_email(subject, to_email, html_content)
+        send_email(subject, to_email, html_content, ab_test_metadata={'subject': subject})
         print("Email sent successfully.")
         logging.info("Email sent successfully.")
     except Exception as e:
