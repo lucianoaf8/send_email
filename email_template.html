@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Daily Dose of Motivation and Information</title>
+    <title>Daily Motivation and Information</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Good Morning, {{ user_name }}! 🌞</h1>
+            <h1>Good Morning, {{ USER_NAME }}! 🌞</h1>
             <p>Today is {{ current_date }}. It's Day {{ counter }} of your journey!</p>
         </div>
         <div class="content">
             <div class="weather animated">
                 <div class="weather-icon">{{ weather_icon }}</div>
                 <div class="weather-info">
-                    <div class="weather-temp">{{ temperature }}</div>
+                    <div class="weather-temp">{{ weather.split(',')[0] }}</div>
                     <div class="weather-desc">{{ weather_description }}</div>
                 </div>
                 <div class="weather-tip">{{ weather_tip }}</div>
@@ -29,24 +30,34 @@
             
             <h2>AI News</h2>
             <div class="news-grid">
-                {% for category, articles in ai_news.items() %}
                 <div class="news-tile">
-                    <h3>{{ category }}</h3>
-                    {% for article in articles %}
+                    <h3>Artificial Intelligence</h3>
+                    {% for article in ai_news %}
                     <p><a href="{{ article.link }}">{{ article.title }}</a></p>
                     {% endfor %}
                 </div>
-                {% endfor %}
+                <div class="news-tile">
+                    <h3>AI Development</h3>
+                    {% for article in ai_dev_news %}
+                    <p><a href="{{ article.link }}">{{ article.title }}</a></p>
+                    {% endfor %}
+                </div>
+                <div class="news-tile">
+                    <h3>Prompt Engineering</h3>
+                    {% for article in prompt_eng_news %}
+                    <p><a href="{{ article.link }}">{{ article.title }}</a></p>
+                    {% endfor %}
+                </div>
             </div>
             
             <h2>Daily Crosswords</h2>
             <div class="crossword-container">
-                {% for puzzle in crosswords %}
+                {% for puzzle, word, clue in crosswords %}
                 <div class="crossword">
-                    <p class="crossword-clue">Clue: {{ puzzle.clue }}</p>
-                    <p class="crossword-puzzle">{{ puzzle.puzzle }}</p>
-                    <button class="reveal-btn" onclick="revealAnswer(this)">Reveal</button>
-                    <p class="crossword-answer" style="display:none;">{{ puzzle.word }}</p>
+                    <p>Clue: {{ clue }}</p>
+                    <p class="crossword-puzzle">{{ puzzle }}</p>
+                    <button class="reveal-btn">Reveal</button>
+                    <span class="hidden-answer">{{ word }}</span>
                 </div>
                 {% endfor %}
             </div>
@@ -79,8 +90,6 @@
             <p>This email is part of your daily motivational series. Keep pushing forward!</p>
         </div>
     </div>
-    <script>
-        {{ js_content }}
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

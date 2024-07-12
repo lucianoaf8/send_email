@@ -1,5 +1,3 @@
-# main.py
-
 import os
 import sys
 import requests
@@ -13,8 +11,7 @@ import http.client
 import urllib.parse
 import json
 import random
-
-print("Script started.")
+from jinja2 import Environment, FileSystemLoader
 
 print("Script started.")
 
@@ -209,20 +206,6 @@ def update_counter():
     logging.info(f"Counter updated to: {counter}")
     return counter
 
-def get_weather_icon(description):
-    # Map weather descriptions to Font Awesome icons
-    weather_icons = {
-        'clear sky': '☀️',
-        'few clouds': '🌤️',
-        'scattered clouds': '⛅',
-        'broken clouds': '☁️',
-        'shower rain': '🌦️',
-        'rain': '🌧️',
-        'thunderstorm': '⛈️',
-        'snow': '❄️',
-        'mist': '🌫️'
-    }
-    return weather_icons.get(description.lower(), '🌡️')  # Default to thermometer if no match
 
 def create_email_content(counter):
     print("Creating email content.")
