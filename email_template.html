@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Daily Dose of Motivation and Information</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Good Morning, {{ user_name }}! 🌞</h1>
+            <p>Today is {{ current_date }}. It's Day {{ counter }} of your journey!</p>
+        </div>
+        <div class="content">
+            <div class="weather animated">
+                <div class="weather-icon">{{ weather_icon }}</div>
+                <div class="weather-info">
+                    <div class="weather-temp">{{ temperature }}</div>
+                    <div class="weather-desc">{{ weather_description }}</div>
+                </div>
+                <div class="weather-tip">{{ weather_tip }}</div>
+            </div>
+            
+            <h2>Motivational Quote</h2>
+            <p class="quote animated">{{ quote }}</p>
+            
+            <h2>This Day in History</h2>
+            <p class="history-fact animated">{{ history_fact }}</p>
+            
+            <h2>AI News</h2>
+            <div class="news-grid">
+                {% for category, articles in ai_news.items() %}
+                <div class="news-tile">
+                    <h3>{{ category }}</h3>
+                    {% for article in articles %}
+                    <p><a href="{{ article.link }}">{{ article.title }}</a></p>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <h2>Daily Crosswords</h2>
+            <div class="crossword-container">
+                {% for puzzle in crosswords %}
+                <div class="crossword">
+                    <p class="crossword-clue">Clue: {{ puzzle.clue }}</p>
+                    <p class="crossword-puzzle">{{ puzzle.puzzle }}</p>
+                    <button class="reveal-btn" onclick="revealAnswer(this)">Reveal</button>
+                    <p class="crossword-answer" style="display:none;">{{ puzzle.word }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <h2>Historical Events</h2>
+            <div class="historical-events">
+                <h3>Births on this day:</h3>
+                <ul>
+                    {% for birth in birthdays %}
+                    <li>{{ birth }}</li>
+                    {% endfor %}
+                </ul>
+                <h3>Deaths on this day:</h3>
+                <ul>
+                    {% for death in deaths %}
+                    <li>{{ death }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <h2>Fun Fact</h2>
+            <p class="fun-fact animated">{{ fun_fact }}</p>
+            
+            <h2>Your Daily Dose of Motivation</h2>
+            <div class="gif-container">
+                <img src="{{ gif_url }}" alt="Motivational Gif">
+            </div>
+        </div>
+        <div class="footer">
+            <p>This email is part of your daily motivational series. Keep pushing forward!</p>
+        </div>
+    </div>
+    <script>
+        {{ js_content }}
+    </script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+    font-size: 28px;
+    animation: fadeIn 1s;
+}
+
+h2 {
+    color: #4CAF50;
+    border-bottom: 2px solid #4CAF50;
+    padding-bottom: 10px;
+    margin-top: 30px;
+    font-size: 24px;
+}
+
+.content {
+    padding: 20px;
+}
+
+.quote, .challenge, .tip, .fun-fact, .history-fact {
+    font-style: italic;
+    color: #555;
+    margin: 15px 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-left: 5px solid #4CAF50;
+    border-radius: 5px;
+    transition: transform 0.3s ease;
+}
+
+.quote:hover, .challenge:hover, .tip:hover, .fun-fact:hover, .history-fact:hover {
+    transform: translateX(10px);
+}
+
+.weather {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.weather-icon {
+    font-size: 64px;
+    margin-right: 15px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.weather-info {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.weather-temp {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.weather-desc {
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+.weather-tip {
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.gif-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.gif-container img {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.gif-container img:hover {
+    transform: scale(1.05);
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.news-tile {
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 5px;
+    transition: transform 0.3s ease;
+}
+
+.news-tile:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.news-tile h3 {
+    font-size: 16px;
+    margin-top: 0;
+}
+
+.news-tile a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.crossword-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.crossword {
+    background-color: #e9e9e9;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.crossword-puzzle {
+    font-family: monospace;
+    font-size: 18px;
+    letter-spacing: 3px;
+}
+
+.reveal-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.reveal-btn:hover {
+    background-color: #45a049;
+}
+
+.historical-events {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.historical-events h3 {
+    color: #4CAF50;
+    margin-top: 0;
+}
+
+.footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.9em;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.animated {
+    animation: slideIn 0.5s ease-out;
+}
+
+@media (max-width: 600px) {
+    .container {
+        margin: 10px;
+    }
+    
+    h1 {
+        font-size: 24px;
+    }
+    
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+}
