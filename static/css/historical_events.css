@@ -1,0 +1,12 @@
+/* static/css/historical_events.css */
+.historical-events {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.historical-events h3 {
+    color: #4CAF50;
+    margin-top: 0;
+}

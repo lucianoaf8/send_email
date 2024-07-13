@@ -1,0 +1,36 @@
+/* static/css/weather_widget.css */
+.weather-widget {
+    background-color: #3498db;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.weather-widget__icon {
+    font-size: 64px;
+    margin-right: 15px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.weather-widget__info {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.weather-widget__temp {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.weather-widget__desc {
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+.weather-widget__tip {
+    margin-top: 10px;
+    font-style: italic;
+}

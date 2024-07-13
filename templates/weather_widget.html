@@ -1,0 +1,9 @@
+<!-- templates/weather_widget.html -->
+<div class="weather-widget weather-widget__{{ weather_description }}">
+    <div class="weather-widget__icon">{{ weather_icon }}</div>
+    <div class="weather-widget__info">
+        <div class="weather-widget__temp">{{ weather.split(',')[0] }}</div>
+        <div class="weather-widget__desc">{{ weather_description }}</div>
+    </div>
+    <div class="weather-widget__tip">{{ weather_tip }}</div>
+</div>

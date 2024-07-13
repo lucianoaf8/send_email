@@ -1,0 +1,19 @@
+<!-- templates/historical_events.html -->
+<h2>Historical Events</h2>
+<div class="historical-events">
+    <h3>This Day in History</h3>
+    <p class="history-fact animated">{{ history_fact }}</p>
+    
+    <h3>Births on this day:</h3>
+    <ul>
+        {% for birth in birthdays %}
+        <li>{{ birth }}</li>
+        {% endfor %}
+    </ul>
+    <h3>Deaths on this day:</h3>
+    <ul>
+        {% for death in deaths %}
+        <li>{{ death }}</li>
+        {% endfor %}
+    </ul>
+</div>

@@ -48,6 +48,7 @@ any exceptions that occur during the process.
 
 import os
 import logging
+import traceback
 from dotenv import load_dotenv
 from datetime import datetime
 from utils.logging_setup import setup_logging
@@ -87,11 +88,9 @@ def create_email_content(counter):
         
         current_date = datetime.now(pytz.timezone(os.getenv('TIMEZONE', 'UTC'))).strftime("%A, %B %d, %Y")
         
-        template_content = read_file('templates/email_template.html')
-        css_content = read_file('static/css/email_style.css')
-
-        env = jinja2.Environment(loader=jinja2.FileSystemLoader('.'))
-        template = env.from_string(template_content)
+        # Set up the Jinja2 environment with the correct template loader
+        env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates'))
+        template = env.get_template('email_template.html')
         
         html_content = template.render(
             USER_NAME=os.getenv('USER_NAME'),
@@ -113,15 +112,14 @@ def create_email_content(counter):
             daily_challenge=daily_challenge
         )
         
-        final_html = inline_css(html_content, css_content)
-        
         with io.open('data_files/email_preview.html', 'w', encoding='utf-8') as f:
-            f.write(final_html)
+            f.write(html_content)
         
-        logging.info("Email content created with inlined CSS and saved for local viewing.")
-        return final_html
+        logging.info("Email content created and saved for local viewing.")
+        return html_content
     except Exception as e:
         logging.error(f"Error while creating content: {e}")
+        logging.error(traceback.format_exc())
         raise
 
 if __name__ == "__main__":

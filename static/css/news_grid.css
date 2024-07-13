@@ -1,0 +1,23 @@
+/* static/css/news_grid.css */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.news-tile {
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.news-tile h3 {
+    font-size: 16px;
+    margin-top: 0;
+}
+
+.news-tile a {
+    color: #4CAF50;
+    text-decoration: none;
+}
