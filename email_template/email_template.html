@@ -25,33 +25,11 @@
             <h2>Motivational Quote</h2>
             <p class="quote animated">{{ quote }}</p>
             
-            <h2>AI News</h2>
-            <div class="news-grid">
-                <div class="news-tile">
-                    <h3>Artificial Intelligence</h3>
-                    {% for article in ai_news %}
-                    <p><a href="{{ article.link }}">{{ article.title }}</a></p>
-                    {% endfor %}
-                </div>
-                <div class="news-tile">
-                    <h3>AI Development</h3>
-                    {% for article in ai_dev_news %}
-                    <p><a href="{{ article.link }}">{{ article.title }}</a></p>
-                    {% endfor %}
-                </div>
-                <div class="news-tile">
-                    <h3>Prompt Engineering</h3>
-                    {% for article in prompt_eng_news %}
-                    <p><a href="{{ article.link }}">{{ article.title }}</a></p>
-                    {% endfor %}
-                </div>
-            </div>
-            
-            <h2>This Day in History</h2>
-            <p class="history-fact animated">{{ history_fact }}</p>
-            
             <h2>Historical Events</h2>
             <div class="historical-events">
+                <h3>This Day in History</h3>
+                <p class="history-fact animated">{{ history_fact }}</p>
+                
                 <h3>Births on this day:</h3>
                 <ul>
                     {% for birth in birthdays %}
@@ -73,6 +51,32 @@
             <div class="gif-container">
                 <img src="{{ gif_url }}" alt="Motivational Gif">
             </div>
+            
+            <h2>Daily Challenge</h2>
+            <p class="daily-challenge animated">Your challenge for today is: {{ daily_challenge }}</p>
+
+            <h2>News</h2>
+            <div class="news-grid">
+                <div class="news-tile">
+                    <h3>Artificial Intelligence</h3>
+                    {% for article in ai_news %}
+                    <p><a href="{{ article.link }}">{{ article.title }}</a></p>
+                    {% endfor %}
+                </div>
+                <div class="news-tile">
+                    <h3>AI Development</h3>
+                    {% for article in ai_dev_news %}
+                    <p><a href="{{ article.link }}">{{ article.title }}</a></p>
+                    {% endfor %}
+                </div>
+                <div class="news-tile">
+                    <h3>Prompt Engineering</h3>
+                    {% for article in prompt_eng_news %}
+                    <p><a href="{{ article.link }}">{{ article.title }}</a></p>
+                    {% endfor %}
+                </div>
+            </div>
+            
         </div>
         <div class="footer">
             <p>This email is part of your daily motivational series. Keep pushing forward!</p>

@@ -204,6 +204,7 @@ def create_email_content(counter):
         weather_tip = get_weather_tip(weather_description)
         history_fact = get_this_day_in_history()
         fun_fact = get_fun_fact()
+        daily_challenge = "Take a 10-minute walk outside during your break today!"  # Example challenge
         
         ai_news = fetch_news("Artificial Intelligence")
         ai_dev_news = fetch_news("AI Development")
@@ -236,12 +237,13 @@ def create_email_content(counter):
             birthdays=birthdays,
             deaths=deaths,
             fun_fact=fun_fact,
-            gif_url=gif_url
+            gif_url=gif_url,
+            daily_challenge=daily_challenge
         )
         
         final_html = inline_css(html_content, css_content)
         
-        with io.open('email_preview.html', 'w', encoding='utf-8') as f:
+        with io.open('data_files/email_preview.html', 'w', encoding='utf-8') as f:
             f.write(final_html)
         
         logging.info("Email content created with inlined CSS and saved for local viewing.")
