@@ -24,7 +24,7 @@ load_dotenv()
 logging.info("Environment variables loaded.")
 
 # Path to the file storing the counter
-COUNTER_FILE = 'utils/counter.txt'
+COUNTER_FILE = 'data_files/counter.txt'
 TEST_SEND_TO = os.getenv("TEST_SEND_TO")
 GIPHY_API_KEY = os.getenv("GIPHY_API_KEY")
 OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
