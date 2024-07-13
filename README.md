@@ -1,114 +1,138 @@
-# Daily Motivational Email Project Overview
- This project is an automated system that generates and sends daily motivational emails. It combines various APIs and data sources to create a personalized, informative, and engaging email for the recipient. The email includes motivational quotes, weather information, news updates, historical facts, and a fun GIF to start the day on a positive note.
+# DAILY_EMAIL
 
-Email Specifications
---------------------
+This project generates and sends a daily email containing motivational quotes, weather updates, historical events, news, and more. The email content is dynamically generated using various APIs and is styled for compatibility across email clients.
 
-### Subject Line
+## Folder Structure
+```
+DAILY_EMAIL/
+│
+├── pycache/
+│
+├── data_files/
+│ ├── counter.txt
+│ ├── email_preview.html
+│ └── keys.xlsx
+│
+├── logs/
+│
+├── static/
+│ └── css/
+│ └── email_style.css
+│
+├── templates/
+│ └── email_template.html
+│
+├── utils/
+│ ├── pycache/
+│ │ ├── logging_setup.cpython-312.pyc
+│ │ ├── send_email.cpython-312.pyc
+│ │ └── utils.cpython-312.pyc
+│ │
+│ ├── logging_setup.py
+│ ├── send_email.py
+│ └── utils.py
+│
+├── .env
+├── .gitignore
+├── main copy.py
+├── main.py
+└── README.md
+```
 
-The subject line is dynamically generated each day and follows the format: "Day [X]: Your Daily Dose of Motivation and Information 🌟" Where [X] is a counter that increments daily, tracking the recipient's journey.
+## Overview
 
-### Body
+### Main Components
 
-The email body is divided into several sections:
+1. **main.py**: The main script that orchestrates the generation and sending of the daily email. It initializes logging, loads environment variables, updates the counter, generates the email content, and sends the email.
+2. **utils/logging_setup.py**: Sets up the logging configuration for the project, including log rotation and customizable log levels and formats.
+3. **utils/send_email.py**: Contains the function to send the email using Gmail's SMTP server. It supports adding attachments and logs the process.
+4. **utils/utils.py**: Defines utility functions to fetch data from various APIs, manage the counter, read files, and inline CSS for the email content.
+5. **templates/email_template.html**: The HTML template for the email content, dynamically populated with data using the Jinja2 templating engine.
+6. **static/css/email_style.css**: The CSS file for styling the email content.
 
-1.  **Header**: Contains a personalized greeting with the recipient's name, current date, and day counter.
-2.  **Weather Section**: Displays current weather information for the user's location, including temperature, description, and a weather-specific tip.
-3.  **Motivational Quote**: Features an inspirational quote of the day.
-4.  **AI News Grid**: Presents the latest news in three categories: Artificial Intelligence, AI Development, and Prompt Engineering.
-5.  **This Day in History**: Highlights a significant historical event that occurred on this day.
-6.  **Historical Events**: Lists notable births and deaths on this day in history.
-7.  **Fun Fact**: Includes a random fun fact to entertain and educate the reader.
-8.  **Motivational GIF**: Displays a randomly selected motivational GIF.
+### Features
 
-### Footer
+- **Logging**: Centralized logging setup that includes log rotation, configurable log levels and formats, and dynamic inclusion of the script name in log messages.
+- **Environment Variables**: Loads sensitive information and configuration settings from a `.env` file.
+- **Dynamic Content Generation**: Fetches data from various APIs to include in the email, such as motivational quotes, weather updates, historical events, and news.
+- **Email Sending**: Uses Gmail's SMTP server to send the generated email, with support for attachments.
+- **Responsive Design**: The email content is styled to be compatible across different email clients.
 
-The footer contains a brief message reminding the user that this email is part of their daily motivational series and encourages them to keep pushing forward.
+## Setup
 
-Techniques, Libraries, and Tools
---------------------------------
+### Prerequisites
 
-1.  Python 3.x
-2.  Libraries:
-    -   requests: For making API calls
-    -   BeautifulSoup: For parsing XML data from news feeds
-    -   dotenv: For loading environment variables
-    -   logging: For error tracking and debugging
-    -   datetime and pytz: For date and time handling
-    -   jinja2: For HTML templating
-    -   cssutils: For CSS parsing and inline styling
-    -   smtplib and email: For sending emails
-3.  APIs:
-    -   Giphy API: For fetching random motivational GIFs
-    -   Quotable API: For daily inspirational quotes
-    -   OpenWeatherMap API: For weather data
-    -   History API: For historical events
-    -   UselessFacts API: For random fun facts
-    -   Google News RSS: For fetching news articles
-4.  CSS: Custom styling for email layout and responsiveness
-5.  HTML: Structure for email content
-6.  SMTP: For sending emails through Gmail
+- Python 3.12 or higher
+- Required Python packages (listed in `requirements.txt` or install via pip)
+- A `.env` file with the necessary environment variables
 
-Email Structure and Layout
---------------------------
+### Environment Variables
 
-The email uses a responsive design with a maximum width of 600px. It features a clean, modern layout with distinct sections for different types of content. The design uses the Roboto font family and a color scheme primarily based on green (#4CAF50) and white backgrounds. The layout is optimized for both desktop and mobile email clients.
+Create a `.env` file in the root directory with the following variables:
+```
+GMAIL_USER=your_gmail_username
+GMAIL_PASSWORD=your_gmail_password
+USER_NAME=Your_Name
+USER_CITY=Your_City
+USER_COUNTRY=Your_Country
+TIMEZONE=Your_Timezone
+TEST_SEND_TO=recipient_email@example.com
+GIPHY_API_KEY=your_giphy_api_key
+OPENWEATHER_API_KEY=your_openweather_api_key
+```
 
-Tracking and Analytics
-----------------------
+### Installation
 
-The current implementation does not include specific tracking or analytics. However, the incremental day counter provides a basic form of engagement tracking.
+1. **Clone the Repository**:
+   ```
+   git clone https://github.com/your_username/DAILY_EMAIL.git
+   cd DAILY_EMAIL
+   ```
 
-Personalization and Dynamic Content
------------------------------------
+#### Install Dependencies:
+```
+pip install -r requirements.txt
+```
 
-1.  User's name in the greeting
-2.  Day counter for personalized journey tracking
-3.  Location-based weather information
-4.  Daily-changing content (quote, news, historical facts, fun fact, GIF)
+#### Run the Script:
 
-Project Structure
------------------
+```
+python main.py
+```
 
--   main.py: Main script for generating and sending the email
--   send_email.py: Module for handling email sending functionality
--   email_template.html: HTML template for the email structure
--   email_style.css: CSS styles for email formatting
--   counter.txt: Stores the current day count
--   .env: Contains environment variables (API keys, email credentials, etc.)
+Folder Details
+--------------
 
-Setup and Usage
----------------
+-   **pycache/**: Contains compiled Python files.
+-   **data_files/**: Stores data files such as the counter, email preview, and keys.
+    -   **counter.txt**: Keeps track of the daily email count.
+    -   **email_preview.html**: Stores a preview of the generated email content.
+    -   **keys.xlsx**: (Optional) Additional data file for key storage.
+-   **logs/**: Stores log files generated during the execution of the script.
+-   **static/css/**: Contains the CSS file for styling the email content.
+    -   **email_style.css**: Stylesheet for the email content.
+-   **templates/**: Contains the HTML template for the email content.
+    -   **email_template.html**: HTML template for the email, populated with dynamic content.
+-   **utils/**: Contains utility scripts for logging setup, email sending, and other helper functions.
+    -   **logging_setup.py**: Sets up logging for the project.
+    -   **send_email.py**: Contains the email sending function.
+    -   **utils.py**: Defines various utility functions.
 
-1.  Install required Python packages: `pip install requests beautifulsoup4 python-dotenv jinja2 cssutils`
-2.  Set up environment variables in a .env file:
-    -   GMAIL_USER: Your Gmail address
-    -   GMAIL_PASSWORD: Your Gmail password or app-specific password
-    -   DISPLAY_NAME: Name to display as the sender
-    -   TEST_SEND_TO: Recipient's email address
-    -   GIPHY_API_KEY: Your Giphy API key
-    -   OPENWEATHER_API_KEY: Your OpenWeatherMap API key
-    -   USER_NAME: Recipient's name
-    -   USER_CITY: Recipient's city
-    -   USER_COUNTRY: Recipient's country
-    -   TIMEZONE: Recipient's timezone
-3.  Run the script: `python main.py`
+#### Example Usage
 
-Best Practices and Guidelines
------------------------------
+To generate and send the daily email, ensure the `main.py` script is properly configured and run it:
 
-1.  Environment variables are used for sensitive information
-2.  Error logging is implemented for debugging
-3.  modular code structure for maintainability
-4.  use of APIs for dynamic content generation
-5.  Responsive design for cross-client compatibility
-6.  Inline CSS for better email client support
 
-Strong Points
--------------
+`python main.py`
 
-1.  Highly personalized and dynamic content
-2.  Diverse range of information sources
-3.  Visually appealing design with weather icons and GIFs
-4.  Responsive layout for various devices and email clients
-5.  Modular code structure for easy maintenance and updates
+The script will log its progress and any errors in the `logs/` directory, and the generated email preview will be saved in `data_files/email_preview.html`.
+
+Contributing
+------------
+
+Feel free to submit issues, fork the repository, and send pull requests. For major changes, please open an issue first to discuss what you would like to change.
+
+License
+-------
+
+This project is licensed under the MIT License.

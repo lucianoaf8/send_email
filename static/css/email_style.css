@@ -1,4 +1,62 @@
 /* static/css/email_style.css */
+
+/*
+This CSS file styles the HTML template for generating daily motivational and informational emails.
+It includes styles for various sections of the email, such as the header, content, weather widget,
+quotes, historical events, news, and the footer. The styles ensure a clean, modern, and responsive
+design for the email content.
+
+Key Sections:
+
+1. General Styles:
+   - Imports the 'Roboto' font from Google Fonts.
+   - Applies the 'Roboto' font family to the entire body.
+   - Sets the line height, text color, background color, margin, and padding for the body.
+
+2. Container:
+   - Styles the main container with a maximum width, centered alignment, background color, border radius,
+     overflow hidden, and box shadow.
+
+3. Header:
+   - Styles the header with a background color, text color, padding, and text alignment.
+   - Sets the styles for h1 tags within the header.
+
+4. Content:
+   - Adds padding to the content section.
+
+5. Quote, Daily Challenge, Weather Tip, Fun Fact, and History Fact:
+   - Styles these sections with italic font, color, margin, padding, background color, left border, and border radius.
+
+6. Weather Widget:
+   - Styles the weather widget with background color, text color, padding, border radius, margin, and box shadow.
+   - Styles for the icon, info, temperature, description, and tip within the weather widget.
+
+7. GIF Container:
+   - Centers the GIF and adds margin.
+   - Styles the img tag within the GIF container with maximum width, border radius, and box shadow.
+
+8. News Grid:
+   - Uses a CSS grid to layout news tiles.
+   - Styles each news tile with background color, padding, border radius, and margin.
+   - Styles for h3 tags and anchor tags within the news tiles.
+
+9. Historical Events:
+   - Styles the historical events section with background color, padding, border radius, and margin.
+   - Styles for h3 tags within the historical events section.
+
+10. Footer:
+    - Styles the footer with background color, text color, text alignment, padding, and font size.
+
+Usage:
+- Link this CSS file in the HTML template using a <link> tag.
+- Ensure to inline these styles for better compatibility in email clients.
+
+Example:
+<head>
+    <link rel="stylesheet" href="static/css/email_style.css">
+</head>
+*/
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
 body {

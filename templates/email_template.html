@@ -1,5 +1,91 @@
+<!-- templates/email_template.html -->
 <!DOCTYPE html>
 <html lang="en">
+
+<!--
+This HTML template is designed to generate a daily motivational and informational email. 
+The template is populated with dynamic content using the Jinja2 templating engine, making 
+it easy to customize and personalize for each recipient. The CSS for styling is linked 
+externally but will be inlined for better compatibility in email clients.
+
+Key Sections:
+
+1. Head Section:
+   - Metadata: Includes character set and viewport settings for responsive design.
+   - Title: Sets the title of the email.
+   - Stylesheet: Links to an external CSS file (email_style.css) which will be inlined during 
+     the email generation process.
+
+2. Body Section:
+   - Container: Wraps the entire content of the email.
+   - Header: Contains a greeting and the current date.
+     - Greeting: Personalized greeting using USER_NAME.
+     - Date and Counter: Displays the current date and the user's journey day counter.
+
+   - Content:
+     - Weather Widget: Displays the current weather.
+       - Icon: Weather icon based on the weather description.
+       - Info: Temperature and weather description.
+       - Tip: Provides a weather-related tip.
+
+     - Motivational Quote: Displays an inspirational quote.
+
+     - Historical Events: Shows historical events, births, and deaths on the current day.
+       - This Day in History: Displays a historical event.
+       - Births: Lists notable births.
+       - Deaths: Lists notable deaths.
+
+     - Fun Fact: Displays a random fun fact.
+
+     - Daily Motivation: Shows a motivational GIF.
+       - GIF: Displays a GIF from the provided URL.
+
+     - Daily Challenge: Presents a daily challenge to the user.
+
+     - News: Displays the latest news in three categories.
+       - Artificial Intelligence: Lists AI-related news articles.
+       - AI Development: Lists AI development news articles.
+       - Prompt Engineering: Lists news articles about prompt engineering.
+
+   - Footer: Concludes the email with a motivational message.
+
+Usage:
+- The HTML template uses Jinja2 placeholders (e.g., {{ USER_NAME }}) to inject dynamic content.
+- CSS styles are initially linked externally but should be inlined for better email client compatibility.
+- To generate the final email content, the placeholders are replaced with actual data, and the CSS is inlined.
+
+Example:
+# Using Jinja2 to render the template
+from jinja2 import Environment, FileSystemLoader
+
+# Load the template
+env = Environment(loader=FileSystemLoader('.'))
+template = env.get_template('path/to/your_template.html')
+
+# Render the template with actual data
+html_content = template.render(
+    USER_NAME='John Doe',
+    current_date='Wednesday, March 10, 2024',
+    counter=5,
+    weather='15°C, clear sky',
+    weather_icon='☀️',
+    weather_description='clear sky',
+    weather_tip="It's a beautiful day! Consider outdoor activities.",
+    quote="Success is not final, failure is not fatal: It is the courage to continue that counts. - Winston Churchill",
+    history_fact="1969: Apollo 11 landed on the Moon.",
+    birthdays=['1932: John Smith', '1955: Jane Doe'],
+    deaths=['1997: Michael Johnson', '2002: Laura Brown'],
+    fun_fact="Bananas are berries, but strawberries aren't.",
+    gif_url='https://giphy.com/some_motivational_gif',
+    daily_challenge="Take a 10-minute walk outside during your break today!",
+    ai_news=[{'title': 'AI Breakthrough', 'link': 'https://news.example.com/ai-breakthrough'}],
+    ai_dev_news=[{'title': 'New AI Development Tool', 'link': 'https://news.example.com/ai-dev-tool'}],
+    prompt_eng_news=[{'title': 'Prompt Engineering Advances', 'link': 'https://news.example.com/prompt-engineering'}]
+)
+
+# Inline the CSS and save or send the email content
+-->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
