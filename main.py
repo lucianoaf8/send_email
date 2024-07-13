@@ -57,6 +57,7 @@ from utils.utils import update_counter, get_gif, get_quote, get_weather, get_wea
 import io
 import pytz
 import jinja2
+from premailer import Premailer
 
 # Set up logging with the script name
 log_filename = setup_logging(log_folder='logs', log_level=logging.INFO, log_format='%(script_name)s - %(asctime)s %(message)s')
@@ -112,11 +113,39 @@ def create_email_content(counter):
             daily_challenge=daily_challenge
         )
         
-        with io.open('data_files/email_preview.html', 'w', encoding='utf-8') as f:
-            f.write(html_content)
+        # Read and concatenate all CSS files
+        css_files = [
+            'static/css/general.css',
+            'static/css/container.css',
+            'static/css/header.css',
+            'static/css/content.css',
+            'static/css/weather_widget.css',
+            'static/css/sections.css',
+            'static/css/gif_container.css',
+            'static/css/news_grid.css',
+            'static/css/historical_events.css',
+            'static/css/footer.css'
+        ]
+        css_content = ''
+        for css_file in css_files:
+            css_content += read_file(css_file) + '\n'
         
-        logging.info("Email content created and saved for local viewing.")
-        return html_content
+        # Remove <link> tags from the HTML content
+        html_content = html_content.replace('<link rel="stylesheet" href="static/css/email_style.css">', '')
+
+        # Inline the CSS using Premailer
+        premailer = Premailer(html=html_content, css_text=css_content)
+        final_html = premailer.transform()
+        
+        with io.open('data_files/email_preview.html', 'w', encoding='utf-8') as f:
+            f.write(final_html)
+        
+        logging.info("Email content created with inlined CSS and saved for local viewing.")
+        return final_html
+    except jinja2.exceptions.TemplateNotFound as e:
+        logging.error(f"Template not found: {e}")
+        logging.error(traceback.format_exc())
+        raise
     except Exception as e:
         logging.error(f"Error while creating content: {e}")
         logging.error(traceback.format_exc())

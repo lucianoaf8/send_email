@@ -5,36 +5,42 @@ This project generates and sends a daily email containing motivational quotes, w
 ## Folder Structure
 ```
 DAILY_EMAIL/
-│
-├── pycache/
-│
 ├── data_files/
-│ ├── counter.txt
-│ ├── email_preview.html
-│ └── keys.xlsx
-│
+│   ├── counter.txt
+│   ├── email_preview.html
+│   ├── keys.xlsx
 ├── logs/
-│
 ├── static/
-│ └── css/
-│ └── email_style.css
-│
+│   └── css/
+│       ├── container.css
+│       ├── content.css
+│       ├── email_style.css
+│       ├── footer.css
+│       ├── general.css
+│       ├── gif_container.css
+│       ├── header.css
+│       ├── historical_events.css
+│       ├── news_grid.css
+│       ├── sections.css
+│       ├── weather_widget.css
 ├── templates/
-│ └── email_template.html
-│
+│   ├── daily_challenge.html
+│   ├── daily_motivation.html
+│   ├── email_template.html
+│   ├── footer.html
+│   ├── fun_fact.html
+│   ├── head.html
+│   ├── header.html
+│   ├── historical_events.html
+│   ├── motivational_quote.html
+│   ├── news.html
+│   ├── weather_widget.html
 ├── utils/
-│ ├── pycache/
-│ │ ├── logging_setup.cpython-312.pyc
-│ │ ├── send_email.cpython-312.pyc
-│ │ └── utils.cpython-312.pyc
-│ │
-│ ├── logging_setup.py
-│ ├── send_email.py
-│ └── utils.py
-│
+│   ├── logging_setup.py
+│   ├── send_email.py
+│   ├── utils.py
 ├── .env
 ├── .gitignore
-├── main copy.py
 ├── main.py
 └── README.md
 ```
