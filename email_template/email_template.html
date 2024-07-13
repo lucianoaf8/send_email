@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Daily Motivation</title>
+    <title>Daily Motivation and Information</title>
     <link rel="stylesheet" href="email_style.css">
 </head>
 <body>
@@ -12,7 +12,6 @@
             <h1>Good Morning, {{ USER_NAME }}! 🌞</h1>
             <p>Today is {{ current_date }}. It's Day {{ counter }} of your journey!</p>
         </div>
-
         <div class="content">
             <div class="weather animated">
                 <div class="weather-icon">{{ weather_icon }}</div>
@@ -22,37 +21,36 @@
                 </div>
                 <div class="weather-tip">{{ weather_tip }}</div>
             </div>
-
-            {% if quote_placement == 'top' %}
+            
             <h2>Motivational Quote</h2>
-            <div class="quote">{{ quote }}</div>
-            {% endif %}
-
+            <p class="quote animated">{{ quote }}</p>
+            
             <h2>AI News</h2>
             <div class="news-grid">
                 <div class="news-tile">
                     <h3>Artificial Intelligence</h3>
                     {% for article in ai_news %}
-                    <a href="{{ article.link }}">{{ article.title }}</a>
+                    <p><a href="{{ article.link }}">{{ article.title }}</a></p>
                     {% endfor %}
                 </div>
                 <div class="news-tile">
                     <h3>AI Development</h3>
                     {% for article in ai_dev_news %}
-                    <a href="{{ article.link }}">{{ article.title }}</a>
+                    <p><a href="{{ article.link }}">{{ article.title }}</a></p>
                     {% endfor %}
                 </div>
                 <div class="news-tile">
                     <h3>Prompt Engineering</h3>
                     {% for article in prompt_eng_news %}
-                    <a href="{{ article.link }}">{{ article.title }}</a>
+                    <p><a href="{{ article.link }}">{{ article.title }}</a></p>
                     {% endfor %}
                 </div>
             </div>
-
+            
             <h2>This Day in History</h2>
-            <div class="history-fact">{{ history_fact }}</div>
-
+            <p class="history-fact animated">{{ history_fact }}</p>
+            
+            <h2>Historical Events</h2>
             <div class="historical-events">
                 <h3>Births on this day:</h3>
                 <ul>
@@ -67,23 +65,17 @@
                     {% endfor %}
                 </ul>
             </div>
-
+            
             <h2>Fun Fact</h2>
-            <div class="fun-fact">{{ fun_fact }}</div>
-
-            {% if quote_placement == 'bottom' %}
-            <h2>Motivational Quote</h2>
-            <div class="quote">{{ quote }}</div>
-            {% endif %}
-
+            <p class="fun-fact animated">{{ fun_fact }}</p>
+            
             <h2>Your Daily Dose of Motivation</h2>
             <div class="gif-container">
-                <img src="data:image/jpeg;base64,{{ gif_url }}" alt="Motivational Gif" loading="lazy">
+                <img src="{{ gif_url }}" alt="Motivational Gif">
             </div>
         </div>
-
         <div class="footer">
-            This email is part of your daily motivational series. Keep pushing forward!
+            <p>This email is part of your daily motivational series. Keep pushing forward!</p>
         </div>
     </div>
 </body>

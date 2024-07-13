@@ -1,3 +1,4 @@
 *.env
 counter.txt
 logs/
+__pycache__

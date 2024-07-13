@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import logging
 from datetime import datetime
 import pytz
-from send_email import send_email
+from utils.send_email import send_email
 import http.client
 import urllib.parse
 import json
