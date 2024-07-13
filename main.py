@@ -1,197 +1,69 @@
 # main.py
+
+"""
+This script serves as the main entry point for generating and sending a daily email that includes various
+informative and motivational content. The script coordinates fetching data, generating HTML content,
+and sending the email using pre-defined utility functions and environment configurations.
+
+Features:
+1. **Logging Initialization**: Sets up logging using a centralized configuration to ensure all log messages
+   are captured in a single log file with the script name included in each message.
+
+2. **Environment Variables**: Loads environment variables from a `.env` file using the `dotenv` package to
+   configure the script, including email credentials and user-specific settings.
+
+3. **Email Content Creation**: Generates the email content dynamically using various utility functions to
+   fetch data such as weather information, quotes, historical facts, and news. The content is then rendered
+   using a Jinja2 template and inlined with CSS for styling.
+
+4. **Error Handling**: Includes comprehensive error handling to log any issues that occur during the content
+   creation or email sending process, ensuring that issues can be easily diagnosed from the log file.
+
+5. **Email Sending**: Sends the generated email using Gmail's SMTP server, with the option to specify a recipient
+   through environment variables.
+
+Usage:
+- Ensure that environment variables for Gmail user, password, and recipient email are set in a `.env` file.
+- Run the script as the main module to generate and send the daily email.
+
+Example:
+```
+if name == "main":
+try:
+counter = update_counter()
+subject = f"Day {counter}: Your Daily Dose of Motivation and Information 🌟"
+to_email = os.getenv("TEST_SEND_TO")
+html_content = create_email_content(counter)
+send_email(subject, to_email, html_content)
+except Exception as e:
+logging.error(f"An error occurred: {e}")
+logging.info(f"Check the log file for more details: {log_filename}")
+finally:
+logging.info("Script execution completed.")
+```
+
+This example initializes the counter, generates the email content, and sends the email while handling
+any exceptions that occur during the process.
+"""
+
 import os
-import requests
-from bs4 import BeautifulSoup
-from dotenv import load_dotenv
 import logging
+from dotenv import load_dotenv
 from datetime import datetime
-import pytz
-import random
-import jinja2
-import cssutils
-import io
 from utils.logging_setup import setup_logging
 from utils.send_email import send_email
+from utils.utils import update_counter, get_gif, get_quote, get_weather, get_weather_icon, get_weather_tip, get_this_day_in_history, fetch_news, get_historical_birthdays, get_historical_deaths, get_fun_fact, read_file, inline_css
+import io
+import pytz
+import jinja2
 
-# Suppress cssutils logging
-cssutils.log.setLevel(logging.CRITICAL)
-
-log_filename = setup_logging()
+# Set up logging with the script name
+log_filename = setup_logging(log_folder='logs', log_level=logging.INFO, log_format='%(script_name)s - %(asctime)s %(message)s')
 logging.info("Script started.")
 
 # Load environment variables from .env file
 load_dotenv()
 logging.info("Environment variables loaded.")
-
-# Path to the file storing the counter
-COUNTER_FILE = 'data_files/counter.txt'
-TEST_SEND_TO = os.getenv("TEST_SEND_TO")
-GIPHY_API_KEY = os.getenv("GIPHY_API_KEY")
-OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
-USER_NAME = os.getenv("USER_NAME")
-USER_CITY = os.getenv("USER_CITY")
-USER_COUNTRY = os.getenv("USER_COUNTRY")
-TIMEZONE = os.getenv("TIMEZONE", "UTC")
-THENEWSAPI_KEY = os.getenv("THENEWSAPI_KEY")
-
-def get_gif():
-    logging.info("Fetching GIF of the day.")
-    response = requests.get(f"https://api.giphy.com/v1/gifs/random?tag=motivational&api_key={GIPHY_API_KEY}")
-    gif_data = response.json()['data']
-    gif_url = gif_data['images']['original']['url']
-    logging.info(f"GIF URL: {gif_url}")
-    return gif_url
-
-def get_quote():
-    logging.info("Fetching quote of the day.")
-    response = requests.get("https://api.quotable.io/random?tags=inspirational")
-    quote_data = response.json()
-    quote = f"{quote_data['content']} - {quote_data['author']}"
-    logging.info(f"Quote: {quote}")
-    return quote
-
-def get_weather():
-    logging.info("Fetching weather forecast.")
-    try:
-        url = f"http://api.openweathermap.org/data/2.5/weather?q={USER_CITY},{USER_COUNTRY}&appid={OPENWEATHER_API_KEY}&units=metric"
-        response = requests.get(url)
-        response.raise_for_status()
-        weather_data = response.json()
-        
-        if 'main' not in weather_data:
-            logging.error(f"Unexpected API response: {weather_data}")
-            return "Weather data unavailable"
-        
-        temp = weather_data['main']['temp']
-        description = weather_data['weather'][0]['description']
-        result = f"{temp:.1f}°C, {description}"
-        logging.info(f"Weather fetched successfully: {result}")
-        return result
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Error fetching weather: {e}")
-        return "Weather data unavailable"
-    except KeyError as e:
-        logging.error(f"Error parsing weather data: {e}")
-        return "Weather data unavailable"
-    except Exception as e:
-        logging.error(f"Unexpected error in get_weather: {e}")
-        return "Weather data unavailable"
-
-def get_weather_icon(description):
-    weather_icons = {
-        'clear sky': '☀️',
-        'few clouds': '🌤️',
-        'scattered clouds': '⛅',
-        'broken clouds': '☁️',
-        'shower rain': '🌦️',
-        'rain': '🌧️',
-        'thunderstorm': '⛈️',
-        'snow': '❄️',
-        'mist': '🌫️'
-    }
-    return weather_icons.get(description.lower(), '🌡️')
-
-def get_weather_tip(description):
-    tips = {
-        'clear sky': "It's a beautiful day! Consider outdoor activities.",
-        'few clouds': "Mild weather ahead. Perfect for a walk!",
-        'scattered clouds': "Partly cloudy skies. Don't forget your sunglasses!",
-        'broken clouds': "Cloudy with some sun. Dress in layers!",
-        'shower rain': "Light rain expected. Grab an umbrella!",
-        'rain': "Rainy day ahead. Stay dry and cozy!",
-        'thunderstorm': "Storms brewing. Stay indoors and stay safe!",
-        'snow': "Snow day! Bundle up and watch out for icy patches.",
-        'mist': "Misty conditions. Drive carefully and use fog lights."
-    }
-    return tips.get(description.lower(), "Check the forecast for detailed weather information.")
-
-def get_this_day_in_history():
-    logging.info("Fetching this day in history.")
-    today = datetime.now()
-    month, day = today.month, today.day
-    response = requests.get(f"https://history.muffinlabs.com/date/{month}/{day}")
-    data = response.json()
-    event = data['data']['Events'][0]
-    return f"{event['year']}: {event['text']}"
-
-def fetch_news(topic, num_articles=3):
-    url = f"https://news.google.com/rss/search?q={topic}&hl=en-CA&gl=CA&ceid=CA:en"
-    response = requests.get(url)
-    soup = BeautifulSoup(response.content, features="xml")
-    items = soup.findAll('item')[:num_articles]
-    
-    articles = []
-    for item in items:
-        article = {
-            'title': item.title.text,
-            'link': item.link.text,
-            'pub_date': item.pubDate.text
-        }
-        articles.append(article)
-    
-    return articles
-
-def get_historical_birthdays():
-    today = datetime.now()
-    month, day = today.month, today.day
-    url = f"https://history.muffinlabs.com/date/{month}/{day}"
-    response = requests.get(url)
-    data = response.json()
-    births = data['data']['Births'][:3]
-    return [f"{person['year']}: {person['text']}" for person in births]
-
-def get_historical_deaths():
-    today = datetime.now()
-    month, day = today.month, today.day
-    url = f"https://history.muffinlabs.com/date/{month}/{day}"
-    response = requests.get(url)
-    data = response.json()
-    deaths = data['data']['Deaths'][:3]
-    return [f"{person['year']}: {person['text']}" for person in deaths]
-
-def get_fun_fact():
-    logging.info("Fetching fun fact.")
-    response = requests.get("https://uselessfacts.jsph.pl/random.json?language=en")
-    fact_data = response.json()
-    return fact_data['text']
-
-def update_counter():
-    logging.info("Updating counter.")
-    if not os.path.exists(COUNTER_FILE):
-        with open(COUNTER_FILE, 'w') as f:
-            f.write('0')
-    
-    with open(COUNTER_FILE, 'r+') as f:
-        counter = int(f.read().strip())
-        counter += 1
-        f.seek(0)
-        f.write(str(counter))
-        f.truncate()
-    
-    logging.info(f"Counter updated to: {counter}")
-    return counter
-
-def read_file(filename):
-    with open(filename, 'r', encoding='utf-8') as f:
-        return f.read()
-
-def inline_css(html, css):
-    soup = BeautifulSoup(html, 'html.parser')
-    style = cssutils.parseString(css)
-    
-    for rule in style:
-        if rule.type == rule.STYLE_RULE:
-            for selector in rule.selectorList:
-                for tag in soup.select(selector.selectorText):
-                    if not tag.get('style'):
-                        tag['style'] = ''
-                    tag['style'] += f'{rule.style.cssText};'
-    
-    style_tag = soup.new_tag('style')
-    style_tag.string = css
-    soup.head.append(style_tag)
-    
-    return str(soup)
 
 def create_email_content(counter):
     logging.info("Creating email content.")
@@ -213,16 +85,16 @@ def create_email_content(counter):
         birthdays = get_historical_birthdays()
         deaths = get_historical_deaths()
         
-        current_date = datetime.now(pytz.timezone(TIMEZONE)).strftime("%A, %B %d, %Y")
+        current_date = datetime.now(pytz.timezone(os.getenv('TIMEZONE', 'UTC'))).strftime("%A, %B %d, %Y")
         
-        template_content = read_file('email_template/email_template.html')
-        css_content = read_file('email_template/email_style.css')
+        template_content = read_file('templates/email_template.html')
+        css_content = read_file('static/css/email_style.css')
 
         env = jinja2.Environment(loader=jinja2.FileSystemLoader('.'))
         template = env.from_string(template_content)
         
         html_content = template.render(
-            USER_NAME=USER_NAME,
+            USER_NAME=os.getenv('USER_NAME'),
             current_date=current_date,
             counter=counter,
             weather=weather,
@@ -254,18 +126,13 @@ def create_email_content(counter):
 
 if __name__ == "__main__":
     try:
-        logging.info("Main execution started.")
-        
         counter = update_counter()
-        logging.info(f"Counter updated: {counter}")
 
         subject = f"Day {counter}: Your Daily Dose of Motivation and Information 🌟"
-        to_email = TEST_SEND_TO
+        to_email = os.getenv("TEST_SEND_TO")
         html_content = create_email_content(counter)
 
-        logging.info("Sending email.")
         send_email(subject, to_email, html_content)
-        logging.info("Email sent successfully.")
     except Exception as e:
         logging.error(f"An error occurred: {e}")
         logging.info(f"Check the log file for more details: {log_filename}")

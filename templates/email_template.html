@@ -13,15 +13,15 @@
             <p>Today is {{ current_date }}. It's Day {{ counter }} of your journey!</p>
         </div>
         <div class="content">
-            <div class="weather animated">
-                <div class="weather-icon">{{ weather_icon }}</div>
-                <div class="weather-info">
-                    <div class="weather-temp">{{ weather.split(',')[0] }}</div>
-                    <div class="weather-desc">{{ weather_description }}</div>
+            <div class="weather-widget weather-widget__{{ weather_description }}">
+                <div class="weather-widget__icon">{{ weather_icon }}</div>
+                <div class="weather-widget__info">
+                    <div class="weather-widget__temp">{{ weather.split(',')[0] }}</div>
+                    <div class="weather-widget__desc">{{ weather_description }}</div>
                 </div>
-                <div class="weather-tip">{{ weather_tip }}</div>
+                <div class="weather-widget__tip">{{ weather_tip }}</div>
             </div>
-            
+                    
             <h2>Motivational Quote</h2>
             <p class="quote animated">{{ quote }}</p>
             

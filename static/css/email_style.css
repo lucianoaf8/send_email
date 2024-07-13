@@ -1,3 +1,4 @@
+/* static/css/email_style.css */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
 body {
@@ -42,7 +43,7 @@ h2 {
     padding: 20px;
 }
 
-.quote, .challenge, .tip, .fun-fact, .history-fact {
+.quote, .daily-challenge, .weather-widget__tip, .fun-fact, .history-fact {
     font-style: italic;
     color: #555;
     margin: 15px 0;
@@ -52,7 +53,7 @@ h2 {
     border-radius: 5px;
 }
 
-.weather {
+.weather-widget {
     background-color: #3498db;
     color: white;
     padding: 20px;
@@ -61,29 +62,29 @@ h2 {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.weather-icon {
+.weather-widget__icon {
     font-size: 64px;
     margin-right: 15px;
     display: inline-block;
     vertical-align: middle;
 }
 
-.weather-info {
+.weather-widget__info {
     display: inline-block;
     vertical-align: middle;
 }
 
-.weather-temp {
+.weather-widget__temp {
     font-size: 36px;
     font-weight: bold;
 }
 
-.weather-desc {
+.weather-widget__desc {
     font-size: 18px;
     margin-top: 5px;
 }
 
-.weather-tip {
+.weather-widget__tip {
     margin-top: 10px;
     font-style: italic;
 }
