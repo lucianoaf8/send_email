@@ -1,0 +1,41 @@
+<!-- templates/crosswords.html -->
+
+<div class="crosswords">
+  <h2>Daily Crosswords</h2>
+  
+  <table class="crosswords__grid">
+    {% for row in crosswords.grid %}
+    <tr>
+      {% for cell in row %}
+        <td{% if cell != 0 %} data-number="{{ cell }}" data-letter="{{ crosswords.answers[loop.parent.loop.index0][loop.index0] }}"{% endif %}>
+          {% if cell != 0 %}
+            <span class="crosswords__number">{{ cell }}</span>
+          {% endif %}  
+        </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+  
+  <div class="crosswords__clues">
+    <div class="crosswords__clues-across">
+      <h3>Across</h3>
+      <ol>
+      {% for clue in crosswords.across_clues %}
+        <li data-clue="A{{ loop.index }}">{{ clue }}</li>
+      {% endfor %}
+      </ol>
+    </div>
+    
+    <div class="crosswords__clues-down">
+      <h3>Down</h3>  
+      <ol>
+      {% for clue in crosswords.down_clues %}
+        <li data-clue="D{{ loop.index }}">{{ clue }}</li>
+      {% endfor %}  
+      </ol>
+    </div>
+  </div>
+  
+  <button class="crosswords__reveal">Reveal Answers</button>
+</div>

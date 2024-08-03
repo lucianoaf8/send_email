@@ -1,22 +1,12 @@
 <!-- templates/news.html -->
 <h2>News</h2>
 <div class="news-grid">
+    {% for topic, articles in news_by_topic.items() %}
     <div class="news-tile">
-        <h3>Artificial Intelligence</h3>
-        {% for article in ai_news %}
+        <h3>{{ topic }}</h3>
+        {% for article in articles %}
         <p><a href="{{ article.link }}">{{ article.title }}</a></p>
         {% endfor %}
     </div>
-    <div class="news-tile">
-        <h3>AI Development</h3>
-        {% for article in ai_dev_news %}
-        <p><a href="{{ article.link }}">{{ article.title }}</a></p>
-        {% endfor %}
-    </div>
-    <div class="news-tile">
-        <h3>Prompt Engineering</h3>
-        {% for article in prompt_eng_news %}
-        <p><a href="{{ article.link }}">{{ article.title }}</a></p>
-        {% endfor %}
-    </div>
+    {% endfor %}
 </div>

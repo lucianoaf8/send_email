@@ -53,11 +53,12 @@ from dotenv import load_dotenv
 from datetime import datetime
 from utils.logging_setup import setup_logging
 from utils.send_email import send_email
-from utils.utils import update_counter, get_gif, get_quote, get_weather, get_weather_icon, get_weather_tip, get_this_day_in_history, fetch_news, get_historical_birthdays, get_historical_deaths, get_fun_fact, read_file, inline_css
+from utils.utils import get_gif, get_quote, get_weather, get_weather_icon, get_weather_tip, get_this_day_in_history, fetch_news, get_historical_birthdays, get_historical_deaths, get_fun_fact, read_file, get_email_recipients, update_recipient_counter, get_daily_challenge
 import io
 import pytz
 import jinja2
 from premailer import Premailer
+import pandas as pd
 
 # Set up logging with the script name
 log_filename = setup_logging(log_folder='logs', log_level=logging.INFO, log_format='%(script_name)s - %(asctime)s %(message)s')
@@ -67,22 +68,32 @@ logging.info("Script started.")
 load_dotenv()
 logging.info("Environment variables loaded.")
 
-def create_email_content(counter):
+def load_keys():
+    try:
+        return pd.read_excel('data_files/keys.xlsx')
+    except Exception as e:
+        logging.error(f"Error loading keys: {e}")
+        return pd.DataFrame()
+    
+def create_email_content(counter, username, interests, city, country):
     logging.info("Creating email content.")
     try:
         gif_url = get_gif()
         quote = get_quote()
-        weather = get_weather()
-        weather_description = weather.split(',')[1].strip()
+        weather = get_weather(city, country)
+        weather_description = weather.split(',')[-1].strip()
         weather_icon = get_weather_icon(weather_description)
         weather_tip = get_weather_tip(weather_description)
+        weather_class = f"weather-widget__{weather_description.lower().replace(' ', '-')}"
         history_fact = get_this_day_in_history()
         fun_fact = get_fun_fact()
-        daily_challenge = "Take a 10-minute walk outside during your break today!"  # Example challenge
+        daily_challenge = get_daily_challenge()
         
-        ai_news = fetch_news("Artificial Intelligence")
-        ai_dev_news = fetch_news("AI Development")
-        prompt_eng_news = fetch_news("Prompt Engineering")
+        # Fetch news for each interest
+        news_by_topic = {}
+        for topic in interests.split(','):
+            topic = topic.strip()
+            news_by_topic[topic] = fetch_news(topic)
         
         birthdays = get_historical_birthdays()
         deaths = get_historical_deaths()
@@ -94,18 +105,19 @@ def create_email_content(counter):
         template = env.get_template('email_template.html')
         
         html_content = template.render(
-            USER_NAME=os.getenv('USER_NAME'),
+            USER_NAME=username,
             current_date=current_date,
             counter=counter,
             weather=weather,
             weather_icon=weather_icon,
             weather_description=weather_description,
             weather_tip=weather_tip,
+            weather_class=weather_class,
+            city=city,
+            country=country,
             quote=quote,
             history_fact=history_fact,
-            ai_news=ai_news,
-            ai_dev_news=ai_dev_news,
-            prompt_eng_news=prompt_eng_news,
+            news_by_topic=news_by_topic,
             birthdays=birthdays,
             deaths=deaths,
             fun_fact=fun_fact,
@@ -153,15 +165,25 @@ def create_email_content(counter):
 
 if __name__ == "__main__":
     try:
-        counter = update_counter()
+        keys_df = load_keys()
+        email_recipients = get_email_recipients(keys_df)
+        
+        for username, email, counter, interests, city, country in email_recipients:
+            subject = f"Day {counter}: Your Daily Dose of Motivation and Information 🌟"
+            html_content = create_email_content(counter, username, interests, city, country)
 
-        subject = f"Day {counter}: Your Daily Dose of Motivation and Information 🌟"
-        to_email = os.getenv("TEST_SEND_TO")
-        html_content = create_email_content(counter)
+            send_email(subject, email, html_content)
+            update_recipient_counter(keys_df, email)
+            
+            logging.info(f"Email sent to {username} at {email}")
 
-        send_email(subject, to_email, html_content)
+        # Save updated keys file
+        keys_df.to_excel('data_files/keys.xlsx', index=False)
+        logging.info("Keys file updated with new counters.")
+
     except Exception as e:
         logging.error(f"An error occurred: {e}")
+        logging.error(traceback.format_exc())
         logging.info(f"Check the log file for more details: {log_filename}")
     finally:
         logging.info("Script execution completed.")

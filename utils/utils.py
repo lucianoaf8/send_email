@@ -64,7 +64,9 @@ from bs4 import BeautifulSoup
 import logging
 from datetime import datetime
 import cssutils
-
+import random
+from crossword import Crossword
+import openpyxl
 
 # Suppress cssutils logging
 cssutils.log.setLevel(logging.CRITICAL)
@@ -87,21 +89,29 @@ def get_quote():
     logging.info(f"Quote: {quote}")
     return quote
 
-def get_weather():
-    logging.info("Fetching weather forecast.")
+def get_weather(city, country):
+    logging.info(f"Fetching weather forecast for {city}, {country}.")
     try:
-        url = f"http://api.openweathermap.org/data/2.5/weather?q={os.getenv('USER_CITY')},{os.getenv('USER_COUNTRY')}&appid={os.getenv('OPENWEATHER_API_KEY')}&units=metric"
+        url = f"http://api.openweathermap.org/data/2.5/forecast?q={city},{country}&appid={os.getenv('OPENWEATHER_API_KEY')}&units=metric"
         response = requests.get(url)
         response.raise_for_status()
         weather_data = response.json()
         
-        if 'main' not in weather_data:
+        if 'list' not in weather_data or not weather_data['list']:
             logging.error(f"Unexpected API response: {weather_data}")
             return "Weather data unavailable"
         
-        temp = weather_data['main']['temp']
-        description = weather_data['weather'][0]['description']
-        result = f"{temp:.1f}°C, {description}"
+        # Get today's forecast (first item in the list)
+        today_forecast = weather_data['list'][0]
+        temp = today_forecast['main']['temp']
+        description = today_forecast['weather'][0]['description']
+        
+        current_temp = today_forecast['main']['temp']
+        min_temp = min(item['main']['temp'] for item in weather_data['list'][:8])
+        max_temp = max(item['main']['temp'] for item in weather_data['list'][:8])
+        description = today_forecast['weather'][0]['description']
+
+        result = f"{current_temp:.1f}°C (Min: {min_temp:.1f}°C, Max: {max_temp:.1f}°C), {description}"
         logging.info(f"Weather fetched successfully: {result}")
         return result
     except requests.exceptions.RequestException as e:
@@ -120,11 +130,54 @@ def get_weather_icon(description):
         'few clouds': '🌤️',
         'scattered clouds': '⛅',
         'broken clouds': '☁️',
+        'overcast clouds': '☁️',
+        'light rain': '🌦️',
+        'moderate rain': '🌧️',
+        'heavy intensity rain': '🌧️',
+        'very heavy rain': '🌧️',
+        'extreme rain': '🌧️',
+        'freezing rain': '🌨️',
+        'light intensity shower rain': '🌦️',
         'shower rain': '🌦️',
-        'rain': '🌧️',
+        'heavy intensity shower rain': '🌧️',
+        'ragged shower rain': '🌧️',
         'thunderstorm': '⛈️',
+        'thunderstorm with light rain': '⛈️',
+        'thunderstorm with rain': '⛈️',
+        'thunderstorm with heavy rain': '⛈️',
+        'light thunderstorm': '🌩️',
+        'heavy thunderstorm': '⛈️',
+        'ragged thunderstorm': '⛈️',
+        'thunderstorm with light drizzle': '⛈️',
+        'thunderstorm with drizzle': '⛈️',
+        'thunderstorm with heavy drizzle': '⛈️',
+        'light intensity drizzle': '🌧️',
+        'drizzle': '🌧️',
+        'heavy intensity drizzle': '🌧️',
+        'light intensity drizzle rain': '🌧️',
+        'drizzle rain': '🌧️',
+        'heavy intensity drizzle rain': '🌧️',
+        'light snow': '🌨️',
         'snow': '❄️',
-        'mist': '🌫️'
+        'heavy snow': '❄️',
+        'sleet': '🌨️',
+        'light shower sleet': '🌨️',
+        'shower sleet': '🌨️',
+        'light rain and snow': '🌨️',
+        'rain and snow': '🌨️',
+        'light shower snow': '🌨️',
+        'shower snow': '🌨️',
+        'heavy shower snow': '❄️',
+        'mist': '🌫️',
+        'smoke': '🌫️',
+        'haze': '🌫️',
+        'sand/dust whirls': '🌪️',
+        'fog': '🌫️',
+        'sand': '🏜️',
+        'dust': '🌫️',
+        'volcanic ash': '🌋',
+        'squalls': '🌬️',
+        'tornado': '🌪️',
     }
     return weather_icons.get(description.lower(), '🌡️')
 
@@ -134,11 +187,17 @@ def get_weather_tip(description):
         'few clouds': "Mild weather ahead. Perfect for a walk!",
         'scattered clouds': "Partly cloudy skies. Don't forget your sunglasses!",
         'broken clouds': "Cloudy with some sun. Dress in layers!",
+        'overcast clouds': "Fully cloudy today. Might be a good day for indoor activities.",
         'shower rain': "Light rain expected. Grab an umbrella!",
         'rain': "Rainy day ahead. Stay dry and cozy!",
         'thunderstorm': "Storms brewing. Stay indoors and stay safe!",
         'snow': "Snow day! Bundle up and watch out for icy patches.",
-        'mist': "Misty conditions. Drive carefully and use fog lights."
+        'mist': "Misty conditions. Drive carefully and use fog lights.",
+        'drizzle': "Light drizzle expected. A light jacket should suffice.",
+        'light rain': "Light rain on the forecast. Don't forget your umbrella!",
+        'moderate rain': "Moderate rain expected. Time for your raincoat!",
+        'heavy intensity rain': "Heavy rain ahead. Stay indoors if possible.",
+        'freezing rain': "Freezing rain alert! Be extremely cautious if going out."
     }
     return tips.get(description.lower(), "Check the forecast for detailed weather information.")
 
@@ -229,3 +288,112 @@ def inline_css(html, css):
     soup.head.append(style_tag)
     
     return str(soup)
+
+WORD_BANK = {
+  'words': ['python', 'coding', 'template', 'email', 'puzzle', 'clues', 'script', 'function'],
+  'clues': {
+    'python': {
+      'across': 'Programming language used for this project', 
+      'down': 'Snake-like name of a programming language'
+    },
+    'coding': {'down': 'Another term for programming'},
+    'template': {'across': 'Used to dynamically generate HTML'},
+    'email': {'across': 'This project sends a daily _____'},
+    'puzzle': {'down': 'The crosswords is a type of word _____'},
+    'clues': {'across': 'Hints to solve the crosswords'},
+    'script': {'down': 'A computer program, often written in Python'},
+    'function': {'across': 'A reusable block of code that performs a specific task'}      
+  }
+}
+
+def generate_crosswords() -> dict:
+    """Generate a crosswords puzzle with a grid, clues, and answers."""
+    words = random.sample(WORD_BANK['words'], 5)
+    clues = {direction: [WORD_BANK['clues'][word][direction] for word in words if direction in WORD_BANK['clues'][word]]
+             for direction in ['across', 'down']}
+
+    # Create a crossword object
+    puzzle = Crossword(13, 13, '-', 5000, words)
+    
+    # Create an empty grid and populate it with the puzzle
+    grid = [['-' for _ in range(puzzle.cols)] for _ in range(puzzle.rows)]
+
+    for i, word in enumerate(words):
+        row, col = puzzle.place(word)
+        for j, letter in enumerate(word):
+            if puzzle.across:
+                grid[row][col + j] = letter
+            else:
+                grid[row + j][col] = letter
+
+    # Assign word numbers based on clues
+    grid_numbered = []
+    num = 1
+    for i, row in enumerate(grid):
+        num_row = []
+        for j, cell in enumerate(row):
+            if cell != '-' and (i == 0 or grid[i-1][j] == '-') and (j == 0 or grid[i][j-1] == '-'):
+                num_row.append(num)
+                num += 1
+            else:
+                num_row.append(0)
+        grid_numbered.append(num_row)
+
+    return {
+        'grid': grid_numbered,
+        'across_clues': clues['across'],
+        'down_clues': clues['down'],
+        'answers': {word: puzzle.solution(word) for word in words}
+    }
+
+def get_email_recipients(df):
+    """
+    Extract email recipients from the keys dataframe.
+    Returns a list of tuples (username, email, counter, interests, city, country).
+    """
+    recipients = df[['Nickname', 'Email', 'Days Receiving the email', 'Interests', 'Current City', 'Current Country']].dropna(subset=['Email'])
+    return [
+        (row['Nickname'], row['Email'], int(row['Days Receiving the email']) + 1, row['Interests'], row['Current City'], row['Current Country'])
+        for _, row in recipients.iterrows()
+    ]
+
+def update_recipient_counter(df, email):
+    """
+    Update the 'Days Receiving the email' counter for the given email.
+    """
+    df.loc[df['Email'] == email, 'Days Receiving the email'] += 1
+    
+def get_daily_challenge():
+    challenges = [
+        "Take a 10-minute walk outside during your break today!",
+        "Write down three things you're grateful for this morning.",
+        "Try a new healthy recipe for lunch or dinner.",
+        "Reach out to a friend or family member you haven't talked to in a while.",
+        "Practice mindfulness or meditation for 5 minutes.",
+        "Learn a new word in a foreign language and use it in a sentence.",
+        "Do a random act of kindness for someone today.",
+        "Try a new stretching routine or yoga pose.",
+        "Read a chapter from a book you've been meaning to start.",
+        "Write down your top three goals for the week and plan how to achieve them.",
+        "Try a new hobby or skill for 15 minutes today.",
+        "Declutter one small area of your living space.",
+        "Listen to a new genre of music during your commute or work.",
+        "Take three deep breaths every hour to reduce stress.",
+        "Write a short story or poem in 10 minutes.",
+        "Start a journal and write your first entry today.",
+        "Go for a 15-minute jog or brisk walk.",
+        "Try a new fruit or vegetable you've never tasted before.",
+        "Compliment three people sincerely today.",
+        "Take a digital detox for 2 hours (no phone, computer, TV).",
+        "Learn and practice a new joke to share with others.",
+        "Do 10 minutes of bodyweight exercises (push-ups, squats, etc.).",
+        "Write a thank-you note to someone who has helped you recently.",
+        "Try a new productivity technique like the Pomodoro method.",
+        "Make a list of 5 things you love about yourself.",
+        "Learn the basics of a new language online for 20 minutes.",
+        "Create a vision board for your goals and dreams.",
+        "Practice active listening in your next conversation.",
+        "Try a new type of tea or coffee and savor the experience.",
+        "Spend 15 minutes learning about a topic you know nothing about."
+    ]
+    return random.choice(challenges)

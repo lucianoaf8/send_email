@@ -1,9 +1,20 @@
-<!-- templates/weather_widget.html -->
-<div class="weather-widget weather-widget__{{ weather_description }}">
-    <div class="weather-widget__icon">{{ weather_icon }}</div>
-    <div class="weather-widget__info">
-        <div class="weather-widget__temp">{{ weather.split(',')[0] }}</div>
-        <div class="weather-widget__desc">{{ weather_description }}</div>
+<div class="weather-widget {{ weather_class }}">
+    <div class="weather-grid">
+        <div class="weather-cell a1">
+            <div class="temp-location">
+                <span class="weather-icon">{{ weather_icon }}</span>
+                <span class="current-temp">{{ weather.split(',')[0].split('(')[0].strip() }}</span>
+                <span class="location">{{ city }}, {{ country }}</span>
+            </div>
+        </div>
+        <div class="weather-cell a2">
+            <span class="minmax-temp">(min: {{ weather.split('Min:')[1].split(',')[0].strip() }}, Max: {{ weather.split('Max:')[1].split(')')[0].strip() }})</span>
+        </div>
+        <div class="weather-cell a3">
+            <span class="weather-desc">{{ weather_description }}</span>
+        </div>
+        <div class="weather-cell b1 b2 b3">
+            <p class="weather-tip">{{ weather_tip }}</p>
+        </div>
     </div>
-    <div class="weather-widget__tip">{{ weather_tip }}</div>
 </div>
