@@ -53,7 +53,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 from utils.logging_setup import setup_logging
 from utils.send_email import send_email
-from utils.utils import get_gif, get_quote, get_weather, get_weather_icon, get_weather_tip, get_this_day_in_history, fetch_news, get_historical_birthdays, get_historical_deaths, get_fun_fact, read_file, get_email_recipients, update_recipient_counter, get_daily_challenge
+from utils.utils import get_gif, get_quote, get_weather, get_weather_icon, get_weather_tip, get_this_day_in_history, fetch_news, get_historical_birthdays, get_historical_deaths, get_fun_fact, read_file, get_email_recipients, update_recipient_counter
 import io
 import pytz
 import jinja2
@@ -87,7 +87,6 @@ def create_email_content(counter, username, interests, city, country):
         weather_class = f"weather-widget__{weather_description.lower().replace(' ', '-')}"
         history_fact = get_this_day_in_history()
         fun_fact = get_fun_fact()
-        daily_challenge = get_daily_challenge()
         
         # Fetch news for each interest
         news_by_topic = {}
@@ -121,8 +120,7 @@ def create_email_content(counter, username, interests, city, country):
             birthdays=birthdays,
             deaths=deaths,
             fun_fact=fun_fact,
-            gif_url=gif_url,
-            daily_challenge=daily_challenge
+            gif_url=gif_url
         )
         
         # Read and concatenate all CSS files
