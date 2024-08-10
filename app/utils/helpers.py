@@ -1,4 +1,4 @@
-# utils/utils.py
+﻿# utils/utils.py
 
 """
 This script defines utility functions used by the main script to fetch data and perform various tasks
@@ -111,7 +111,7 @@ def get_weather(city, country):
         max_temp = max(item['main']['temp'] for item in weather_data['list'][:8])
         description = today_forecast['weather'][0]['description']
 
-        result = f"{current_temp:.1f}°C (Min: {min_temp:.1f}°C, Max: {max_temp:.1f}°C), {description}"
+        result = f"{current_temp:.1f}Â°C (Min: {min_temp:.1f}Â°C, Max: {max_temp:.1f}Â°C), {description}"
         logging.info(f"Weather fetched successfully: {result}")
         return result
     except requests.exceptions.RequestException as e:
@@ -126,60 +126,60 @@ def get_weather(city, country):
 
 def get_weather_icon(description):
     weather_icons = {
-        'clear sky': '☀️',
-        'few clouds': '🌤️',
-        'scattered clouds': '⛅',
-        'broken clouds': '☁️',
-        'overcast clouds': '☁️',
-        'light rain': '🌦️',
-        'moderate rain': '🌧️',
-        'heavy intensity rain': '🌧️',
-        'very heavy rain': '🌧️',
-        'extreme rain': '🌧️',
-        'freezing rain': '🌨️',
-        'light intensity shower rain': '🌦️',
-        'shower rain': '🌦️',
-        'heavy intensity shower rain': '🌧️',
-        'ragged shower rain': '🌧️',
-        'thunderstorm': '⛈️',
-        'thunderstorm with light rain': '⛈️',
-        'thunderstorm with rain': '⛈️',
-        'thunderstorm with heavy rain': '⛈️',
-        'light thunderstorm': '🌩️',
-        'heavy thunderstorm': '⛈️',
-        'ragged thunderstorm': '⛈️',
-        'thunderstorm with light drizzle': '⛈️',
-        'thunderstorm with drizzle': '⛈️',
-        'thunderstorm with heavy drizzle': '⛈️',
-        'light intensity drizzle': '🌧️',
-        'drizzle': '🌧️',
-        'heavy intensity drizzle': '🌧️',
-        'light intensity drizzle rain': '🌧️',
-        'drizzle rain': '🌧️',
-        'heavy intensity drizzle rain': '🌧️',
-        'light snow': '🌨️',
-        'snow': '❄️',
-        'heavy snow': '❄️',
-        'sleet': '🌨️',
-        'light shower sleet': '🌨️',
-        'shower sleet': '🌨️',
-        'light rain and snow': '🌨️',
-        'rain and snow': '🌨️',
-        'light shower snow': '🌨️',
-        'shower snow': '🌨️',
-        'heavy shower snow': '❄️',
-        'mist': '🌫️',
-        'smoke': '🌫️',
-        'haze': '🌫️',
-        'sand/dust whirls': '🌪️',
-        'fog': '🌫️',
-        'sand': '🏜️',
-        'dust': '🌫️',
-        'volcanic ash': '🌋',
-        'squalls': '🌬️',
-        'tornado': '🌪️',
+        'clear sky': 'â˜€ï¸',
+        'few clouds': 'ðŸŒ¤ï¸',
+        'scattered clouds': 'â›…',
+        'broken clouds': 'â˜ï¸',
+        'overcast clouds': 'â˜ï¸',
+        'light rain': 'ðŸŒ¦ï¸',
+        'moderate rain': 'ðŸŒ§ï¸',
+        'heavy intensity rain': 'ðŸŒ§ï¸',
+        'very heavy rain': 'ðŸŒ§ï¸',
+        'extreme rain': 'ðŸŒ§ï¸',
+        'freezing rain': 'ðŸŒ¨ï¸',
+        'light intensity shower rain': 'ðŸŒ¦ï¸',
+        'shower rain': 'ðŸŒ¦ï¸',
+        'heavy intensity shower rain': 'ðŸŒ§ï¸',
+        'ragged shower rain': 'ðŸŒ§ï¸',
+        'thunderstorm': 'â›ˆï¸',
+        'thunderstorm with light rain': 'â›ˆï¸',
+        'thunderstorm with rain': 'â›ˆï¸',
+        'thunderstorm with heavy rain': 'â›ˆï¸',
+        'light thunderstorm': 'ðŸŒ©ï¸',
+        'heavy thunderstorm': 'â›ˆï¸',
+        'ragged thunderstorm': 'â›ˆï¸',
+        'thunderstorm with light drizzle': 'â›ˆï¸',
+        'thunderstorm with drizzle': 'â›ˆï¸',
+        'thunderstorm with heavy drizzle': 'â›ˆï¸',
+        'light intensity drizzle': 'ðŸŒ§ï¸',
+        'drizzle': 'ðŸŒ§ï¸',
+        'heavy intensity drizzle': 'ðŸŒ§ï¸',
+        'light intensity drizzle rain': 'ðŸŒ§ï¸',
+        'drizzle rain': 'ðŸŒ§ï¸',
+        'heavy intensity drizzle rain': 'ðŸŒ§ï¸',
+        'light snow': 'ðŸŒ¨ï¸',
+        'snow': 'â„ï¸',
+        'heavy snow': 'â„ï¸',
+        'sleet': 'ðŸŒ¨ï¸',
+        'light shower sleet': 'ðŸŒ¨ï¸',
+        'shower sleet': 'ðŸŒ¨ï¸',
+        'light rain and snow': 'ðŸŒ¨ï¸',
+        'rain and snow': 'ðŸŒ¨ï¸',
+        'light shower snow': 'ðŸŒ¨ï¸',
+        'shower snow': 'ðŸŒ¨ï¸',
+        'heavy shower snow': 'â„ï¸',
+        'mist': 'ðŸŒ«ï¸',
+        'smoke': 'ðŸŒ«ï¸',
+        'haze': 'ðŸŒ«ï¸',
+        'sand/dust whirls': 'ðŸŒªï¸',
+        'fog': 'ðŸŒ«ï¸',
+        'sand': 'ðŸœï¸',
+        'dust': 'ðŸŒ«ï¸',
+        'volcanic ash': 'ðŸŒ‹',
+        'squalls': 'ðŸŒ¬ï¸',
+        'tornado': 'ðŸŒªï¸',
     }
-    return weather_icons.get(description.lower(), '🌡️')
+    return weather_icons.get(description.lower(), 'ðŸŒ¡ï¸')
 
 def get_weather_tip(description):
     tips = {
